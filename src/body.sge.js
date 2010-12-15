@@ -1,9 +1,23 @@
-var Body = function(x, y, width, height) {
+function Body(x, y, width, height) {
 	this.x = x;
 	this.y = y;
 	this.width = width;
 	this.height = height;
 	active = false;
+
+	var self = this;
+
+	this.lineFrom = function(x, y) {
+		self.lines = new Array();
+		self.lastPoint = new Point(x, y);
+		return self;
+	};
+
+	this.lineTo = function(x, y) {
+		self.lines.push(new Line(self.lastPoint, new Point(x, y)));
+		self.lastPoint = new Point(x, y);
+		return self;
+	};
 };
 
 var Point = function(x, y) {

@@ -10,7 +10,7 @@ var Collision = function(body1, body2, body1Line, body2Line, x, y) {
     this.body2Line = body2Line;
     this.x = x;
     this.y = y;
-}
+};
 
 function collisiondetection(body1, body2) {
 	if (body1.x <= body2.x + body2.width
