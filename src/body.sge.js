@@ -18,6 +18,8 @@ function Body(x, y, width, height) {
 		self.lastPoint = new Point(x, y);
 		return self;
 	};
+	
+	return this;
 };
 
 var Point = function(x, y) {

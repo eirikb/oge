@@ -1,0 +1,8 @@
+ To test the project you must do the following:
+ 
+  *  Install V8.
+
+  *  Specify a location for V8 in the Make file,
+     like this: V8 ?= /home/eirikb/v8/v8-shell
+
+  *  Run make test
