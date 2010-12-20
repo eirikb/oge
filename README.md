@@ -1,4 +1,4 @@
---  OGE, Overworld Game Engine --
+OGE, Overworld Game Engine
 =============
 
 This is a simple, fast and small engine which will only take care of controlling squares of variable size over a given world.
