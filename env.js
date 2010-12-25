@@ -5683,7 +5683,7 @@ var $timers = [],
     EVENT_LOOP_RUNNING = false;
 
 $timers.lock = function(fn){
-    Envjs.sync(fn)();
+    Envjs.sync(fn);
 };
 
 //private internal class

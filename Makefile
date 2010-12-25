@@ -1,27 +1,18 @@
-V ?= 0
-
 SRC_DIR = src
-TEST_DIR = test
-VENDOR_DIR = vendor
-BUILD_DIR = build
+TEST_DIR = spec
+LIB_DIR = lib
+JASMINE_DIR = ${LIB_DIR}/jasmine-1.0.1
 
-PREFIX = .
+V8 = d8
 
-V8 ?= ./v8-shell
-
-BASE_FILES = ${SRC_DIR}/body.sge.js\
-			${SRC_DIR}/collision.sge.js\
-	
-TEST_FILES = ${TEST_DIR}/collision-detection.test.js\
-	
-JSUNITY = ${VENDOR_DIR}/jsunity-0.6.js
-
-SGE_VER = $(shell cat version.txt)
-VER = sed "s/@VERSION/${SGE_VER}/"
-
-DATE=$(shell git log -1 --pretty=format:%ad)
+BASE_FILES = ${SRC_DIR}/world.oge.js
+TEST_FILES = ${TEST_DIR}/WorldSpec.js
+SPEC_FILE = spec.js
+ENV_FILE = env.js
+JASMINE_FILES = ${JASMINE_DIR}/jasmine.js\
+				${JASMINE_DIR}/jasmine-console.js
 
 test:
-	${V8} ${JSUNITY} ${BASE_FILES} test/setup.test.js ${TEST_FILES}
+	${V8} ${ENV_FILE} ${JASMINE_FILES} ${BASE_FILES} ${TEST_FILES} ${SPEC_FILE} 
 
 .PHONY: all test
