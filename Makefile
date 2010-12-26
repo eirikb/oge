@@ -5,10 +5,11 @@ JASMINE_DIR = ${LIB_DIR}/jasmine-1.0.1
 
 V8 = d8
 
-BASE_FILES = ${SRC_DIR}/world.oge.js
+BASE_FILES = ${SRC_DIR}/base.js\
+			${SRC_DIR}/world.oge.js
 TEST_FILES = ${TEST_DIR}/WorldSpec.js
-SPEC_FILE = spec.js
-ENV_FILE = env.js
+SPEC_FILE = ${LIB_DIR}/spec.js
+ENV_FILE = ${LIB_DIR}/env.js
 JASMINE_FILES = ${JASMINE_DIR}/jasmine.js\
 				${JASMINE_DIR}/jasmine-console.js
 
