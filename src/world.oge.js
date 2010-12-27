@@ -17,11 +17,11 @@ OGE.World = function(width, height, maxZoneSize) {
         throw new Error("Constructor called as a function");
     }
 
-
     var width = typeof (width) != 'undefined' ? width : 640;
     var height = typeof (height) != 'undefined' ? height : 480;
-    this.maxSize = maxSize;
+
     var maxZoneSize = maxZoneSize;
+
     var zones = new Array();
     var zoneSize = 0;
 

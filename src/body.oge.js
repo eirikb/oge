@@ -20,21 +20,28 @@
  */
 
 OGE.Body = function(x, y, width, height) {
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
+
+    if (!(this instanceof arguments.callee)) {
+        throw new Error("Constructor called as a function");
+    }
+
+    this.x = typeof (x) != 'undefined' ? x : 0;
+    this.y = typeof (y) != 'undefined' ? y : 0;
+    var width = typeof (width) != 'undefined' ? width : 1;
+    var height = typeof (height) != 'undefined' ? height : 1;
+
+
+    var width = width;
+    var height = height;
+
     this.speed = 0;
-    this.active = false;
-    this.direction = new Direction(0, 0);
+    this.direction = null;
 
+    this.getWidth = function() {
+        return width;
+    };
 
-    this.setDirection(x2, y2) {
-        var a = y2 - y;
-        var b = x2 - x;
-        var h = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
-        var sine = a / h;
-        var cosine = b / h;
-        direction = new Direction(cosine, sine);
+    this.getHeight = function() {
+        return height;
     }
 }
