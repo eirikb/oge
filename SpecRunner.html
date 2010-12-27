@@ -10,17 +10,18 @@
         <!-- include source files here... -->
         <script type="text/javascript" src="src/base.js"></script>
         <script type="text/javascript" src="src/world.oge.js"></script>
+        <script type="text/javascript" src="src/direction.oge.js"></script>
+        <script type="text/javascript" src="src/body.oge.js"></script>
 
         <!-- include spec files here... -->
         <script type="text/javascript" src="spec/WorldSpec.js"></script>
         <script type="text/javascript" src="spec/BodySpec.js"></script>
+        <script type="text/javascript" src="spec/DirectionSpec.js"></script>
     </head>
     <body>
 
-        <script type="text/javascript">
-            jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
-            jasmine.getEnv().execute();
-        </script>
+        <!-- include spec runner files here... --> 
+        <script type="text/javascript" src="SpecRunner.js"></script>
 
     </body>
 </html>
