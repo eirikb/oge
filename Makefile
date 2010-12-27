@@ -6,8 +6,10 @@ JASMINE_DIR = ${LIB_DIR}/jasmine
 V8 = d8
 
 BASE_FILES = ${SRC_DIR}/base.js\
-			 ${SRC_DIR}/world.oge.js
-TEST_FILES = ${TEST_DIR}/WorldSpec.js
+			 ${SRC_DIR}/world.oge.js\
+			 ${SRC_DIR}/direction.oge.js\
+			 ${SRC_DIR}/body.oge.js
+TEST_FILES = ${TEST_DIR}/*.js
 SPECRUNNER_FILE = SpecRunner.js
 ENV_FILE = ${LIB_DIR}/env.js
 JASMINE_FILES = ${JASMINE_DIR}/lib/jasmine.js\
