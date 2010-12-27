@@ -15,6 +15,11 @@ To test the project you must do the following:
   
 Hopefully this will be runnable from v8 in the future 
 
+To try testing in V8 or rhino do:
+
+ * make update
+ * make test
+
 
 Files
 ------------
