@@ -8,7 +8,7 @@ V8 = d8
 BASE_FILES = ${SRC_DIR}/base.js\
 			 ${SRC_DIR}/world.oge.js
 TEST_FILES = ${TEST_DIR}/WorldSpec.js
-SPECRUNNER_FILE = ${LIB_DIR}/spec-runner.js
+SPECRUNNER_FILE = SpecRunner.js
 ENV_FILE = ${LIB_DIR}/env.js
 JASMINE_FILES = ${JASMINE_DIR}/lib/jasmine.js\
 				${LIB_DIR}/jasmine-print.js
