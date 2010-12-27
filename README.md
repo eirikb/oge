@@ -25,7 +25,6 @@ Files
 ------------
  * lib/env.js: Environment file for making Jasmine work
  * lib/jasmine-print.js: My convert of jamsine-html.js to use log as print, no HTML
- * lib/spec-runner.js: Set up Jasmine and execute it similar to SpecRunner.html
 
  * spec/: Spec files, the main tests
 
@@ -34,3 +33,4 @@ Files
 
  * Makefile: Testing and pulling dependent test framework
  * SpecRunner.html: For testing in browser
+ * SpecRunner.js: Set up Jasmine and execute it similar to SpecRunner.html, just for CLI
