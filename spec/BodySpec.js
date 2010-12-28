@@ -49,6 +49,14 @@ describe("Body", function() {
     });
 
     it("should direction set to null, but can be set", function() {
-        exepct(body1.direction).toEqual(null);
+        expect(body1.direction).toEqual(null);
+        expect(body4.direction).toEqual(null);
+        body4.setDirection(0, 1);
+        expect(body4.direction.cos).toEqual(0);
+        expect(body4.direction.sin).toEqual(1);
+        body4.setDirection(1, 0);
+        expect(body4.direction.cos).toEqual(1);
+        expect(body4.direction.sin).toEqual(0);
+ 
     });
 });

@@ -44,4 +44,8 @@ OGE.Body = function(x, y, width, height) {
     this.getHeight = function() {
         return height;
     }
+
+    this.setDirection = function(x2, y2) {
+        this.direction = OGE.Direction.create(this.x, this.y, x2, y2);
+    }
 }
