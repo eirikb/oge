@@ -10,8 +10,8 @@ OGE.Body = function(x, y, width, height) {
     var width = width;
     var height = height;
     var speed = 0;
-    var onActive;
-    var onDeactive;
+    var onActive = null;
+    var onDeactive = null;
 
     this.direction = null;
 
@@ -30,11 +30,11 @@ OGE.Body = function(x, y, width, height) {
     this.setSpeed = function(newSpeed) {
         speed = newSpeed;
         if (speed !== 0) {
-            if (typeof(onActive) !== "undefined") {
+            if (onActive !== null) {
                 onActive();
             }
         } else {
-            if (typeof(onDeactive) !== "undefined") {
+            if (onDeactive !== null) {
                 onDeactive();
             }
         }
