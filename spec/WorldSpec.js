@@ -40,11 +40,19 @@ describe("World", function() {
 
         world2.addBody(new OGE.Body(1, 1, 1, 1));
         expect(world2.getBodies(b).length).toEqual(2);
-        
+
         world2.removeBody(b);
         // This might seem strange, although the bodies are found by x and y of the given body
         expect(world2.getBodies(b).length).toEqual(1);
         expect(world2.getBodies(b2).length).toEqual(1);
+    });
+
+    it("should keep track of active bodies (based on speed)", function() {
+        expect(world1.getActiveBodies().length).toEqual(0);
+        var b = new OGE.Body();
+        expect(world1.getActiveBodies().length).toEqual(0);
+        b.setSpeed(77);
+        expect(world1.getActiveBodies().length).toEqual(1);
     });
 
 });

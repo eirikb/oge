@@ -35,6 +35,19 @@ OGE.World = function(width, height, zoneSize) {
         for (var i = 0; i < z.length; i++) {
             z[i].addBody(body);
         }
+
+        if (body.getSpeed() !== 0) {
+            activeBodies.push(body);
+        }
+
+        body.onActive( function() {
+            activeBodies.push(this);
+        });
+
+        body.onDeactive( function() {
+            activeBodies.pop(this);
+        });
+
         return true;
     };
 
@@ -91,5 +104,9 @@ OGE.World = function(width, height, zoneSize) {
             return new Array(0);
         }
     };
+
+    this.getActiveBodies = function() {
+        return activeBodies;
+    }
 
 }
