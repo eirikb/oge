@@ -1,20 +1,17 @@
 /*
- * "THE BEER-WARE LICENSE" (Revision 42):
- * =============================================================================
- * <eirikb@eirkb.no> wrote this file. As long as you retain this notice you
- * can do whatever you want with this stuff. If we meet some day, and you think
- * this stuff is worth it, you can buy me a beer in return Eirik Brandtzæg
- * =============================================================================
- */
+* "THE BEER-WARE LICENSE" (Revision 42):
+* =============================================================================
+* <eirikb@eirkb.no> wrote this file. As long as you retain this notice you
+* can do whatever you want with this stuff. If we meet some day, and you think
+* this stuff is worth it, you can buy me a beer in return Eirik Brandtzæg
+* =============================================================================
+*/
 /**
- * 
+ *
  * @author eirikb
  */
 OGE.Direction = function(cos, sin) {
-
-    if (!(this instanceof arguments.callee)) {
-        throw new Error("Constructor called as a function");
-    }
+    OGE.assert(this instanceof arguments.callee, "Constructor called as a function");
 
     this.cos = typeof (cos) != 'undefined' ? cos : 0;
     this.sin = typeof (sin) != 'undefined' ? sin : 0;
