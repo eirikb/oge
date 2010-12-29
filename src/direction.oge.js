@@ -1,21 +1,9 @@
-/*
-* "THE BEER-WARE LICENSE" (Revision 42):
-* =============================================================================
-* <eirikb@eirkb.no> wrote this file. As long as you retain this notice you
-* can do whatever you want with this stuff. If we meet some day, and you think
-* this stuff is worth it, you can buy me a beer in return Eirik Brandtzæg
-* =============================================================================
-*/
-/**
- *
- * @author eirikb
- */
 OGE.Direction = function(cos, sin) {
     OGE.assert(this instanceof arguments.callee, "Constructor called as a function");
 
     this.cos = typeof (cos) != 'undefined' ? cos : 0;
     this.sin = typeof (sin) != 'undefined' ? sin : 0;
-}
+};
 
 OGE.Direction.create = function(x1, y1, x2, y2) {
     var a =  y2 - y1;
@@ -24,5 +12,5 @@ OGE.Direction.create = function(x1, y1, x2, y2) {
     var sin = a / h;
     var cos = b / h;
     return new OGE.Direction(cos, sin);
-}
+};
 

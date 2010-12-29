@@ -1,16 +1,3 @@
-/*
-* ============================================================================
-* "THE BEER-WARE LICENSE" (Revision 42):
-* <eirikb@eirikb.no> wrote this file. As long as you retain this notice you
-* can do whatever you want with this stuff. If we meet some day, and you think
-* this stuff is worth it, you can buy me a beer in return Eirik Brandtzæg
-* ============================================================================
-*/
-
-/**
- *
- * @author Eirik Brandtzæg <eirikb@eirikb.no>
- */
 OGE.World = function(width, height, zoneSize) {
 
     OGE.assert(this instanceof arguments.callee, "Constructor called as a function");
@@ -22,6 +9,8 @@ OGE.World = function(width, height, zoneSize) {
     var xZones = width / zoneSize + 1 << 0;
     var yZones = height / zoneSize + 1 << 0;
     var zones = new Array(xZones);
+    var activeBodies = new Array();
+
     for (var x = 0; x < xZones; x++) {
         zones[x] = new Array(yZones);
         for (var y = 0; y < yZones; y++) {
@@ -35,7 +24,7 @@ OGE.World = function(width, height, zoneSize) {
 
     this.getHeight = function() {
         return height;
-    }
+    };
 
     this.addBody = function(body) {
         OGE.assert(body instanceof OGE.Body, "argument not instance of OGE.Body");
@@ -47,14 +36,14 @@ OGE.World = function(width, height, zoneSize) {
             z[i].addBody(body);
         }
         return true;
-    }
+    };
 
     this.removeBody = function(body) {
         var zones2 = this.getZones(body);
         for (var i = 0; i < zones2.length; i++) {
             zones2[i].removeBody(body);
         }
-    }
+    };
 
     this.getBodies = function(body) {
         var bodies = new Array();
@@ -79,7 +68,7 @@ OGE.World = function(width, height, zoneSize) {
         }
 
         return bodies;
-    }
+    };
 
     this.getZones = function(body) {
         var x1 = body.x / zoneSize << 0;
@@ -101,6 +90,6 @@ OGE.World = function(width, height, zoneSize) {
         } else {
             return new Array(0);
         }
-    }
+    };
 
 }
