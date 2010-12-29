@@ -14,6 +14,9 @@
 
 var OGE = {};
 
+/**
+ * This function is suppose to be removed for production, as well as the calls
+ */
 OGE.assert = function (expr, msg) {
     if (!msg) {
         msg = 'Assertion failed';

@@ -16,7 +16,7 @@ OGE.World = function(width, height, zoneSize) {
         for (var y = 0; y < yZones; y++) {
             zones[x][y] = new OGE.Zone(x, y);
         }
-    }
+    };
 
     this.getWidth = function() {
         return width;

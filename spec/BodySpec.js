@@ -4,7 +4,7 @@ describe("Body", function() {
     var body3;
     var body4;
 
-    beforeEach(function() {
+    beforeEach( function() {
         body1 = new OGE.Body(1, 2, 3, 4);
         body2 = new OGE.Body(3, 4, 2, 1);
         body3 = new OGE.Body(5, 7);
@@ -40,12 +40,17 @@ describe("Body", function() {
         expect(body4.getHeight()).toEqual(1);
     });
 
-    it("should have speed set to 0, but can be altered", function() {
-        expect(body1.speed).toEqual(0);
+    it("should have speed set to 0, but can be altered. Only internal", function() {
+        expect(body1.getSpeed()).toEqual(0);
         body1.speed = 7;
-        expect(body1.speed).toEqual(7);
-        body1.speed = -37;
-        expect(body1.speed).toEqual(-37);
+        expect(body1.getSpeed()).toEqual(0);
+        body1.setSpeed(1337);
+        expect(body1.getSpeed()).toEqual(1337);
+        var speed = 42;
+        body1.setSpeed(speed);
+        expect(body1.getSpeed()).toEqual(42);
+        speed = 2;
+        expect(body1.getSpeed()).toEqual(42);
     });
 
     it("should direction set to null, but can be set", function() {
@@ -57,6 +62,21 @@ describe("Body", function() {
         body4.setDirection(1, 0);
         expect(body4.direction.cos).toEqual(1);
         expect(body4.direction.sin).toEqual(0);
- 
+
     });
+
+    it("should call events when setting speed", function() {
+        expect(body1.getSpeed()).toEqual(0);
+        body1.speed = 1337;
+        expect(body1.getSpeed()).toEqual(0);
+        body1.onActive( function() {
+            expect(body1.getSpeed()).not.toEqual(0);
+        });
+        body1.onDeactive( function() {
+            expect(body1.getSpeed()).toEqual(0);
+        });
+        body1.setSpeed(7);
+        body1.setSpeed(0);
+    });
+
 });
