@@ -6,11 +6,11 @@ OGE.Zone = function(x, y) {
 
     var bodies = new Array();
 
-    this.getX = function() {
+    this.x = function() {
         return x;
-    };
+    }
 
-    this.getY = function() {
+    this.y = function() {
         return y;
     };
 

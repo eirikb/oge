@@ -2,8 +2,9 @@ SRC_DIR = src
 TEST_DIR = spec
 LIB_DIR = lib
 JASMINE_DIR = ${LIB_DIR}/jasmine
+ENV_DIR = env
 
-V8 = d8
+V8 = /home/eirikb/v8/v8-shell
 
 BASE_FILES = ${SRC_DIR}/base.js\
 			 ${SRC_DIR}/world.oge.js\
@@ -11,12 +12,18 @@ BASE_FILES = ${SRC_DIR}/base.js\
 			 ${SRC_DIR}/body.oge.js
 TEST_FILES = ${TEST_DIR}/*.js
 SPECRUNNER_FILE = SpecRunner.js
-ENV_FILE = ${LIB_DIR}/env.js
+ENV_FILES = ${ENV_DIR}/env.js\
+            ${ENV_DIR}/dom.js\
+            ${ENV_DIR}/event.js\
+            ${ENV_DIR}/html.js\
+            ${ENV_DIR}/timer.js\
+            ${ENV_DIR}/parser.js\
+            ${ENV_DIR}/window.js 
 JASMINE_FILES = ${JASMINE_DIR}/lib/jasmine.js\
 				${LIB_DIR}/jasmine-print.js
 
 test:
-	${V8} ${ENV_FILE} ${JASMINE_FILES} ${BASE_FILES} ${TEST_FILES} ${SPECRUNNER_FILE}
+	${V8} ${ENV_FILES} ${JASMINE_FILES} ${BASE_FILES} ${TEST_FILES} ${SPECRUNNER_FILE}
 
 update:
 	$(call clone_or_pull, ${JASMINE_DIR}, https://github.com/pivotal/jasmine.git)

@@ -10,20 +10,16 @@ describe("World", function() {
     });
 
     it("should keep a unique instance of private variables", function() {
-        expect(world1.getWidth()).toEqual(1);
-        expect(world1.getHeight()).toEqual(2);
+        expect(world1.width()).toEqual(1);
+        expect(world1.height()).toEqual(2);
 
-        expect(world1.width).not.toBeDefined();
-        expect(world1.height).not.toBeDefined();
+        world1.width(100);
+        expect(world1.width()).toEqual(1);
 
-        world1.width = 100;
-        expect(world1.width).toEqual(100);
-        expect(world1.getWidth()).toEqual(1);
-
-        expect(world2.getWidth()).toEqual(100);
-        expect(world2.getHeight()).toEqual(100);
-        expect(world3.getWidth()).toEqual(640);
-        expect(world3.getHeight()).toEqual(480);
+        expect(world2.width()).toEqual(100);
+        expect(world2.height()).toEqual(100);
+        expect(world3.width()).toEqual(640);
+        expect(world3.height()).toEqual(480);
     });
 
     it("should be possible to add bodies, and only bodies to a world", function() {
@@ -51,7 +47,7 @@ describe("World", function() {
         expect(world1.getActiveBodies().length).toEqual(0);
         var b = new OGE.Body();
         expect(world1.getActiveBodies().length).toEqual(0);
-        b.setSpeed(77);
+        b.speed(77);
         expect(world1.getActiveBodies().length).toEqual(1);
     });
 

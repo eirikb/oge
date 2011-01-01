@@ -18,11 +18,11 @@ OGE.World = function(width, height, zoneSize) {
         }
     };
 
-    this.getWidth = function() {
+    this.width = function() {
         return width;
     };
 
-    this.getHeight = function() {
+    this.height = function() {
         return height;
     };
 
@@ -36,7 +36,7 @@ OGE.World = function(width, height, zoneSize) {
             z[i].addBody(body);
         }
 
-        if (body.getSpeed() !== 0) {
+        if (body.speed() !== 0) {
             activeBodies.push(body);
         }
 
@@ -84,10 +84,10 @@ OGE.World = function(width, height, zoneSize) {
     };
 
     this.getZones = function(body) {
-        var x1 = body.x / zoneSize << 0;
-        var x2 = (body.x + body.getWidth() - 1) / zoneSize << 0;
-        var y1 = body.y / zoneSize << 0;
-        var y2 = (body.y + body.getHeight() - 1) / zoneSize << 0;
+        var x1 = body.x() / zoneSize << 0;
+        var x2 = (body.x() + body.width() - 1) / zoneSize << 0;
+        var y1 = body.y() / zoneSize << 0;
+        var y2 = (body.y() + body.height() - 1) / zoneSize << 0;
 
         if (x1 >= 0 && x1 < xZones && y1 >= 0 && y1 < yZones
         && x2 >= 0 && x2 < xZones && y2 >= 0
@@ -107,6 +107,6 @@ OGE.World = function(width, height, zoneSize) {
 
     this.getActiveBodies = function() {
         return activeBodies;
-    }
+    };
 
 }

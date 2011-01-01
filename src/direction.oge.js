@@ -1,8 +1,23 @@
 OGE.Direction = function(cos, sin) {
     OGE.assert(this instanceof arguments.callee, "Constructor called as a function");
 
-    this.cos = typeof (cos) != 'undefined' ? cos : 0;
-    this.sin = typeof (sin) != 'undefined' ? sin : 0;
+    var cos = typeof (cos) != 'undefined' ? cos : 0;
+    var sin = typeof (sin) != 'undefined' ? sin : 0;
+
+    this.cos = function(newCos) {
+        if (arguments.length > 0) {
+            cos = newCos;
+        }
+        return cos;
+    };
+
+    this.sin= function(newSin) {
+        if (arguments.length > 0) {
+            sin = newSin;
+        }
+        return sin;
+    };
+
 };
 
 OGE.Direction.create = function(x1, y1, x2, y2) {
