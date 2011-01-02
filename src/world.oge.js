@@ -2,28 +2,20 @@ OGE.World = function(width, height, zoneSize) {
 
     OGE.assert(this instanceof arguments.callee, "Constructor called as a function");
 
-    var width = typeof (width) != 'undefined' ? width : 640;
-    var height = typeof (height) != 'undefined' ? height : 480;
-    var zoneSize = typeof(zoneSize) != 'undefined' ? zoneSize : 10;
+    this.width = typeof (width) != 'undefined' ? width : 640;
+    this.height = typeof (height) != 'undefined' ? height : 480;
+    this.zoneSize = typeof(zoneSize) != 'undefined' ? zoneSize : 10;
+    this.activeBodies = new Array();
 
     var xZones = width / zoneSize + 1 << 0;
     var yZones = height / zoneSize + 1 << 0;
-    var zones = new Array(xZones);
-    var activeBodies = new Array();
+    this.zones = new Array(xZones);
 
     for (var x = 0; x < xZones; x++) {
-        zones[x] = new Array(yZones);
+        this.zones[x] = new Array(yZones);
         for (var y = 0; y < yZones; y++) {
-            zones[x][y] = new OGE.Zone(x, y);
+            this.zones[x][y] = new OGE.Zone(x, y);
         }
-    };
-
-    this.width = function() {
-        return width;
-    };
-
-    this.height = function() {
-        return height;
     };
 
     this.addBody = function(body) {
@@ -36,7 +28,7 @@ OGE.World = function(width, height, zoneSize) {
             z[i].addBody(body);
         }
 
-        if (body.speed() !== 0) {
+        if (body.speed !== 0) {
             activeBodies.push(body);
         }
 
@@ -62,7 +54,7 @@ OGE.World = function(width, height, zoneSize) {
         var bodies = new Array();
         var zones2 = this.getZones(body);
         for (var i = 0; i < zones2.length; i++) {
-            var bodies2 = zones2[i].getBodies();
+            var bodies2 = zones2[i].bodies;
             for (var j = 0; j < bodies2.length; j++) {
                 var b = bodies2[j];
                 if (b !== body) {
@@ -84,10 +76,10 @@ OGE.World = function(width, height, zoneSize) {
     };
 
     this.getZones = function(body) {
-        var x1 = body.x() / zoneSize << 0;
-        var x2 = (body.x() + body.width() - 1) / zoneSize << 0;
-        var y1 = body.y() / zoneSize << 0;
-        var y2 = (body.y() + body.height() - 1) / zoneSize << 0;
+        var x1 = body.x / zoneSize << 0;
+        var x2 = (body.x + body.width - 1) / zoneSize << 0;
+        var y1 = body.y / zoneSize << 0;
+        var y2 = (body.y + body.height - 1) / zoneSize << 0;
 
         if (x1 >= 0 && x1 < xZones && y1 >= 0 && y1 < yZones
         && x2 >= 0 && x2 < xZones && y2 >= 0
@@ -96,17 +88,13 @@ OGE.World = function(width, height, zoneSize) {
             var z = new Array((x2 - x1) * (y2 - y1) + 1);
             for (var x = x1; x <= x2; x++) {
                 for (var y = y1; y <= y2; y++) {
-                    z[pos++] = zones[x][y];
+                    z[pos++] = this.zones[x][y];
                 }
             }
             return z;
         } else {
             return new Array(0);
         }
-    };
-
-    this.getActiveBodies = function() {
-        return activeBodies;
     };
 
 }

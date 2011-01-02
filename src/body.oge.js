@@ -2,76 +2,49 @@ OGE.Body = function(x, y, width, height) {
 
     OGE.assert(this instanceof arguments.callee, "Constructor called as a function");
 
-    var x = typeof (x) != 'undefined' ? x : 0;
-    var y = typeof (y) != 'undefined' ? y : 0;
-    var width = typeof (width) != 'undefined' ? width : 1;
-    var height = typeof (height) != 'undefined' ? height : 1;
+    this.x = typeof (x) != 'undefined' ? x : 0;
+    this.y = typeof (y) != 'undefined' ? y : 0;
+    this.width = typeof (width) != 'undefined' ? width : 1;
+    this.height = typeof (height) != 'undefined' ? height : 1;
 
-    var speed = 0;
-    var onActive = null;
-    var onDeactive = null;
+    this.speed = 0;
+    this.direction = null;
 
-    var direction = null;
+    var active = false;
 
-    this.x = function(newX) {
-        if (arguments.length > 0) {
-            x = newX;
-        }
-        return x;
-    };
-
-    this.y = function(newY) {
-        if (arguments.length > 0) {
-            y = newY;
-        }
-        return y;
-    };
-
-    this.width = function() {
-        return width;
-    };
-
-    this.height = function() {
-        return height;
-    };
-
-    this.direction = function(newDirection) {
-        if (arguments.length > 0) {
-            direction = newDirection;
-        };
-        return direction;
-    };
+    var onActive = new Array();
+    var onDeactive = new Array();
+    var onCollision = new Array();
 
     this.setDirection = function(x2, y2) {
-        direction = OGE.Direction.create(x, y, x2, y2);
+        this.direction = OGE.Direction.create(this.x, this.y, x2, y2);
     };
 
-    this.getDirection = function() {
-        return direction;
+    this.isActive = function() {
+        return active;
     };
 
-    this.speed = function(newSpeed) {
-        if (arguments.length > 0) {
-            speed = newSpeed;
-            if (speed !== 0) {
-                if (onActive !== null) {
-                    onActive();
+    this.setActive = function(newActive) {
+        if (active !== newActive) {
+            active = newActive;
+            if (active) {
+                for (var i = 0; i < onActive.length; i++) {
+                    onActive[i]();
                 }
             } else {
-                if (onDeactive !== null) {
-                    onDeactive();
+                for (var i = 0; i < onDeactive.length; i++) {
+                    onDeactive[i]();
                 }
             }
         }
-        return speed;
     };
 
     this.onActive = function(onActiveEvent) {
-        onActive = onActiveEvent;
+        onActive.push(onActiveEvent);
     };
 
     this.onDeactive = function(onDeactiveEvent) {
-        onDeactive = onDeactiveEvent;
+        onDeactive.push(onDeactiveEvent);
     };
 
 }

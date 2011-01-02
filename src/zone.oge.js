@@ -1,31 +1,19 @@
 OGE.Zone = function(x, y) {
     OGE.assert(this instanceof arguments.callee, "Constructor called as a function");
 
-    var x = typeof (x) != 'undefined' ? x : 0;
-    var y = typeof (y) != 'undefined' ? y : 0;
+    this.x = typeof (x) != 'undefined' ? x : 0;
+    this.y = typeof (y) != 'undefined' ? y : 0;
 
-    var bodies = new Array();
-
-    this.x = function() {
-        return x;
-    }
-
-    this.y = function() {
-        return y;
-    };
-
-    this.getBodies = function() {
-        return bodies;
-    };
+    this.bodies = new Array();
 
     this.addBody = function(body) {
         OGE.assert(body instanceof OGE.Body, "Argument not instance of OGE.Body");
-        bodies.push(body);
+        this.bodies.push(body);
     };
 
     this.removeBody = function(body) {
         OGE.assert(body instanceof OGE.Body, "Argument not instance of OGE.Body");
-        bodies.pop(body);
+        this.bodies.pop(body);
     };
 
 }
