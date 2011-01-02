@@ -7,8 +7,8 @@ OGE.World = function(width, height, zoneSize) {
     this.zoneSize = typeof(zoneSize) != 'undefined' ? zoneSize : 10;
     this.activeBodies = new Array();
 
-    var xZones = width / zoneSize + 1 << 0;
-    var yZones = height / zoneSize + 1 << 0;
+    var xZones = width / this.zoneSize + 1 << 0;
+    var yZones = height / this.zoneSize + 1 << 0;
     this.zones = new Array(xZones);
 
     var self = this;
@@ -24,7 +24,7 @@ OGE.World = function(width, height, zoneSize) {
         OGE.assert(body instanceof OGE.Body, "argument not instance of OGE.Body");
 
         var z = this.getZones(body);
-        if (z.length == 0) {
+        if (z.length === 0) {
             return false;
         }
         for (var i = 0; i < z.length; i++) {
@@ -79,14 +79,13 @@ OGE.World = function(width, height, zoneSize) {
     };
 
     this.getZones = function(body) {
-        var x1 = body.x / zoneSize << 0;
-        var x2 = (body.x + body.width - 1) / zoneSize << 0;
-        var y1 = body.y / zoneSize << 0;
-        var y2 = (body.y + body.height - 1) / zoneSize << 0;
+        if (body.x >= 0 && body.x + body.width - 1 < this.width
+        && body.y >= 0 && body.y + body.height -  1< this.height) {
+            var x1 = body.x / this.zoneSize << 0;
+            var x2 = (body.x + body.width - 1) / this.zoneSize << 0;
+            var y1 = body.y / this.zoneSize << 0;
+            var y2 = (body.y + body.height - 1) / this.zoneSize << 0;
 
-        if (x1 >= 0 && x1 < xZones && y1 >= 0 && y1 < yZones
-        && x2 >= 0 && x2 < xZones && y2 >= 0
-        && y2 < yZones) {
             var pos = 0;
             var z = new Array((x2 - x1) * (y2 - y1) + 1);
             for (var x = x1; x <= x2; x++) {
