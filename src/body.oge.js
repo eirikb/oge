@@ -47,4 +47,14 @@ OGE.Body = function(x, y, width, height) {
         onDeactive.push(onDeactiveEvent);
     };
 
+    this.onCollision = function(onCollisionEvent) {
+        onCollision.push(onCollisionEvent);
+    };
+
+    this.collide = function(collision) {
+        for (var i = 0; i < onCollision.length; i++) {
+            onCollision[i](collision);
+        }
+    };
+
 }

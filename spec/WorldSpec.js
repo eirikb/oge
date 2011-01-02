@@ -28,10 +28,10 @@ describe("World", function() {
         }).toThrow(new Error("argument not instance of OGE.Body"));
 
         var b = new OGE.Body(1, 2, 3, 4);
-        world2.addBody(b);
+        expect(world2.addBody(b)).toBeTruthy();
         expect(world2.getBodies(b).length).toEqual(0);
         var b2 = new OGE.Body(5, 2, 3, 4);
-        world2.addBody(b2);
+        expect(world2.addBody(b2)).toBeTruthy();
         expect(world2.getBodies(b).length).toEqual(1);
 
         world2.addBody(new OGE.Body(1, 1, 1, 1));
@@ -43,12 +43,18 @@ describe("World", function() {
         expect(world2.getBodies(b2).length).toEqual(1);
     });
 
-    it("should keep track of active bodies (based on speed)", function() {
-       // expect(world1.activeBodies.length).toEqual(0);
-        var b = new OGE.Body();
-      //  expect(world1.activeBodies.length).toEqual(0);
-        b.speed = 77;
-       // expect(world1.activeBodies.length).toEqual(1);
+    it("should keep track of active bodies", function() {
+        var b = new OGE.Body(1, 2, 3, 4);
+        expect(world2.addBody(b)).toBeTruthy();
+        expect(world2.activeBodies.length).toEqual(0);
+        b.setActive(true);
+        expect(world2.activeBodies.length).toEqual(1);
+        var b2 = new OGE.Body(1, 2, 3, 4);
+        b2.setActive(true);
+        expect(world2.addBody(b2)).toBeTruthy();
+        expect(world2.activeBodies.length).toEqual(2);
+        b2.setActive(false);
+        expect(world2.activeBodies.length).toEqual(1);
     });
 
 });

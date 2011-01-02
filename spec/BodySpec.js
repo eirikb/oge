@@ -58,21 +58,51 @@ describe("Body", function() {
         expect(body4.direction.sin).toEqual(0);
     });
 
-/*
-    it("should call events when setting speed", function() {
-        expect(body1.speed()).toEqual(0);
-        body1.speed(1337);
-        expect(body1.speed()).toEqual(1337);
+    it("should call events on activating", function() {
+        var count = 0;
         body1.onActive( function() {
-            expect(body1.speed()).not.toEqual(0);
+            expect(body1.isActive()).toBeTruthy();
+            count++;
+        });
+
+        body1.onActive( function() {
+            expect(body1.isActive()).toBeTruthy();
+            count++;
         });
 
         body1.onDeactive( function() {
-            expect(body1.speed()).toEqual(0);
+            expect(body1.isActive()).toBeFalsy();
+            count++;
         });
 
-        body1.speed(7);
-        body1.speed(0);
+        body1.onDeactive( function() {
+            expect(body1.isActive()).toBeFalsy();
+            count++;
+        });
+
+        // Setting the same state will not trigger the events
+        body1.setActive(false);
+        body1.setActive(true);
+        body1.setActive(true);
+        body1.setActive(false);
+        body1.setActive(false);
+
+        expect(count).toEqual(4);
     });
-*/
+
+    it("should call events on collision", function() {
+        var count = 0;
+        body1.onCollision( function() {
+            count++;
+        }) ;
+
+        body1.onCollision( function() {
+            count++;
+        });
+
+        body1.collide();
+        body1.collide();
+        expect(count).toEqual(4);
+    });
+
 });

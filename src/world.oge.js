@@ -11,6 +11,8 @@ OGE.World = function(width, height, zoneSize) {
     var yZones = height / zoneSize + 1 << 0;
     this.zones = new Array(xZones);
 
+    var self = this;
+
     for (var x = 0; x < xZones; x++) {
         this.zones[x] = new Array(yZones);
         for (var y = 0; y < yZones; y++) {
@@ -20,6 +22,7 @@ OGE.World = function(width, height, zoneSize) {
 
     this.addBody = function(body) {
         OGE.assert(body instanceof OGE.Body, "argument not instance of OGE.Body");
+
         var z = this.getZones(body);
         if (z.length == 0) {
             return false;
@@ -28,16 +31,16 @@ OGE.World = function(width, height, zoneSize) {
             z[i].addBody(body);
         }
 
-        if (body.speed !== 0) {
-            activeBodies.push(body);
+        if (body.isActive()) {
+            this.activeBodies.push(body);
         }
 
         body.onActive( function() {
-            activeBodies.push(this);
+            self.activeBodies.push(body);
         });
 
         body.onDeactive( function() {
-            activeBodies.pop(this);
+            self.activeBodies.pop(body);
         });
 
         return true;
