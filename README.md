@@ -28,8 +28,6 @@ To test the project you must do the following:
   
 Hopefully this will be runnable from v8 in the future 
 
-To try testing in v8 or rhino do:
- * Run this:
-       make update
- * And this:
-       make test
+To try testing in v8 or rhino run these commands:
+    make update
+    make test
