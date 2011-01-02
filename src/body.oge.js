@@ -51,10 +51,25 @@ OGE.Body = function(x, y, width, height) {
         onCollision.push(onCollisionEvent);
     };
 
-    this.collide = function(collision) {
+    this.collide = function(body) {
         for (var i = 0; i < onCollision.length; i++) {
-            onCollision[i](collision);
+            onCollision[i](body);
         }
+    };
+
+    this.checkCollision = function(x, y, width, height) {
+        if (arguments.length == 1) {
+            var body = x;
+            x = body.x;
+            y = body.y;
+            width = body.width;
+            height = body.height;
+        }
+
+        return this.x < x + width
+        && this.x + this.width > x
+        && this.y < y + height
+        && this.y + this.height > y;
     };
 
 }

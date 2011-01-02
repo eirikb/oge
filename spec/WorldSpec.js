@@ -121,4 +121,46 @@ describe("World", function() {
         expect(world2.getBodies(p2).length).toEqual(1);
     });
 
+    it("should move active bodies when stepping", function() {
+        var w = new OGE.World(100, 100);
+        var b1 = new OGE.Body(0, 0, 10, 10);
+        w.addBody(b1);
+        b1.setActive(true);
+        b1.speed = 1;
+        b1.direction = new OGE.Direction(1, 0);
+
+        var b2 = new OGE.Body(15, 0, 10, 10);
+        w.addBody(b2);
+
+        w.step();
+        expect(b1.x).toEqual(1);
+        expect(b1.y).toEqual(0);
+
+        var count = 0;
+        b1.onCollision( function() {
+            count++;
+        });
+
+        b1.onCollision( function() {
+            count++;
+        });
+
+        b2.onCollision( function() {
+            count++;
+        });
+
+        b2.onCollision( function() {
+            count++;
+        });
+
+        for (var i = 0; i < 4; i++) {
+            w.step();
+        }
+
+        expect(count).toEqual(0);
+        w.step();
+        expect(count).toEqual(4);
+
+    });
+
 });

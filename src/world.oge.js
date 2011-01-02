@@ -99,4 +99,44 @@ OGE.World = function(width, height, zoneSize) {
         }
     };
 
+    this.step = function() {
+        for (var i = 0; i < this.activeBodies.length; i++) {
+            var body = this.activeBodies[i];
+            if (body.speed > 0 && body.direction !== null) {
+                var endX = body.x + body.direction.cos * body.speed << 0;
+                var endY = body.y + body.direction.sin * body.speed << 0;
+                var bodies = this.getBodies(body);
+                if (bodies.length > 0) {
+                    move(body, bodies, endX, endY);
+                } else {
+                    body.x = endX;
+                    body.y = endY;
+                }
+            }
+        }
+
+    };
+
+    var move = function(body, bodies, endX, endY) {
+        var x = body.x;
+        var y = body.y;
+        var xDiff = x < endX ? 1 : -1;
+        var yDiff = y < endY ? 1 : -1;
+        while (x << 0 != endX || y << 0 != endY) {
+            x += x << 0 != endX ? xDiff : 0;
+            y += y << 0 != endY ? yDiff : 0;
+            for(var i = 0; i < bodies.length; i++) {
+                var body2 = bodies[i];
+                if (!body2.checkCollision(body) && body2.checkCollision(x, y, body.width, body.height)) {
+                    console.log("COL")
+                    body.collide(body2);
+                    body2.collide(body);
+                    return;
+                }
+                body.x = x;
+                body.y = y;
+            }
+        }
+    }
+
 }

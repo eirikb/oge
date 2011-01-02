@@ -105,4 +105,17 @@ describe("Body", function() {
         expect(count).toEqual(4);
     });
 
+    it("should check collision on both coordinates + size as well as body object", function() {
+        var b1 = new OGE.Body(0, 0, 10, 10);
+        var b2 = new OGE.Body(5, 5, 10, 10);
+        var b3 = new OGE.Body(10, 10, 10, 10);
+        expect(b1.checkCollision(b2)).toBeTruthy();
+        expect(b1.checkCollision(5, 5, 10, 10)).toBeTruthy();
+        expect(b2.checkCollision(b1)).toBeTruthy();
+        expect(b1.checkCollision(b3)).toBeFalsy();
+        expect(b3.checkCollision(b2)).toBeTruthy();
+        expect(b3.checkCollision(b1)).toBeFalsy();
+        expect(b3.checkCollision(0, 0, 10, 10)).toBeFalsy();
+    });
+
 });
