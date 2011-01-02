@@ -6,8 +6,8 @@ The only features are collision detection and sliding bodies when colliding.
   
 Files
 ------------
- * lib/env.js: Environment file for making Jasmine work in terminal (rhino, v8)
- * lib/jasmine-print.js: My version of jamsine-html.js to use log as print, no HTML
+ * <b>lib/env.js</b>: Environment file for making Jasmine work in terminal (rhino, v8)
+ * <b>lib/jasmine-print.js</b>: My version of jamsine-html.js to use log as print, no HTML
 
  * <b>spec/*.js</b>: Spec files, the main tests
 
@@ -23,7 +23,7 @@ Testing
 
 To test the project you must do the following:
  
- * Run 
+ * Run:
      make update 
    to fetch dependecies
  * Open SpecRunner.html in a browser
@@ -31,7 +31,7 @@ To test the project you must do the following:
 Hopefully this will be runnable from v8 in the future 
 
 To try testing in v8 or rhino do:
- * 
+ * Run this:
      make update
- * 
+ * And this:
      make test
