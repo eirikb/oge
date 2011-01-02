@@ -187,4 +187,40 @@ describe("World", function() {
         expect(count).toEqual(4);
     });
 
+    it("should concider changing zones as it checks for collisions", function() {
+        var w = new OGE.World(100, 100);
+        var b = new OGE.Body(0, 0, 10, 10);
+        w.addBody(b);
+        b.setActive(true);
+        b.speed = 50;
+        b.direction = new OGE.Direction(1, 0);
+        var count = 0;
+        b.onCollision( function() {
+            count++;
+        });
+
+        w.addBody(new OGE.Body(30, 0, 10, 10));
+        w.step();
+        expect(count).toEqual(1);
+        expect(b.x).toEqual(20);
+    });
+
+    it("should make bodies slide if they have the slide property set to true", function() {
+        var w = new OGE.World(1000, 1000);
+        var b = new OGE.Body(0, 0, 13, 12);
+        for (var i = 0; i < 7; i++) {
+            w.addBody(new OGE.Body(20 + i * 11, 0 + i * 11, 11, 11));
+        }
+        b.direction = new OGE.Direction(1, 0);
+        b.speed = 3;
+
+        var count = 0;
+        b.onCollision( function() {
+            count++;
+        });
+
+        w.step();
+
+    });
+
 });

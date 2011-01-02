@@ -105,37 +105,37 @@ OGE.World = function(width, height, zoneSize) {
             if (body.speed > 0 && body.direction !== null) {
                 var endX = body.x + body.direction.cos * body.speed << 0;
                 var endY = body.y + body.direction.sin * body.speed << 0;
-                var bodies = this.getBodies(body);
-                if (bodies.length > 0) {
-                    move(body, bodies, endX, endY);
-                } else {
-                    body.x = endX;
-                    body.y = endY;
-                }
+                move(body, endX, endY);
             }
         }
 
     };
 
-    var move = function(body, bodies, endX, endY) {
-        var x = body.x;
-        var y = body.y;
-        var xDiff = x < endX ? 1 : -1;
-        var yDiff = y < endY ? 1 : -1;
-        while (x << 0 != endX || y << 0 != endY) {
-            x += x << 0 != endX ? xDiff : 0;
-            y += y << 0 != endY ? yDiff : 0;
+    var move = function(body, endX, endY) {
+        var lastX = body.x;
+        var lastY = body.y;
+        var xDiff = body.x < endX ? 1 : -1;
+        var yDiff = body.y < endY ? 1 : -1;
+        while (body.x << 0 != endX || body.y << 0 != endY) {
+            lastX = body.x;
+            lastY = body.y;
+            body.x += body.x << 0 != endX ? xDiff : 0;
+            body.y += body.y << 0 != endY ? yDiff : 0;
+            // Have to do this since zones can change when moving the body
+            var bodies = self.getBodies(body);
             for(var i = 0; i < bodies.length; i++) {
                 var body2 = bodies[i];
-                if (!body2.checkCollision(body) && body2.checkCollision(x, y, body.width, body.height)) {
-                    if (body.collide(body2) && body2.collide(body)) {
+                if (!body2.checkCollision(lastX, lastY, body.width, body.height) && body2.checkCollision(body)) {
+                    var collide1 = body.collide(body2) === true;
+                    var collide2 = body2.collide(body) === true;
+                    if (collide1 && collide2) {
+                        body.x = lastX;
+                        body.y = lastY;
                         return;
                     }
                 }
-                body.x = x;
-                body.y = y;
             }
         }
-    }
+    };
 
 }
