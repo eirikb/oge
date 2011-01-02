@@ -23,12 +23,8 @@ OGE.World = function(width, height, zoneSize) {
     this.addBody = function(body) {
         OGE.assert(body instanceof OGE.Body, "argument not instance of OGE.Body");
 
-        var z = this.getZones(body);
-        if (z.length === 0) {
+        if (addBodyToZones(body) !== true) {
             return false;
-        }
-        for (var i = 0; i < z.length; i++) {
-            z[i].addBody(body);
         }
 
         if (body.isActive()) {
@@ -47,10 +43,7 @@ OGE.World = function(width, height, zoneSize) {
     };
 
     this.removeBody = function(body) {
-        var zones2 = this.getZones(body);
-        for (var i = 0; i < zones2.length; i++) {
-            zones2[i].removeBody(body);
-        }
+        removeBodyFromZones(body);
     };
 
     this.getBodies = function(body) {
@@ -111,6 +104,24 @@ OGE.World = function(width, height, zoneSize) {
 
     };
 
+    var addBodyToZones = function(body) {
+        var zones = self.getZones(body);
+        if (zones.length === 0) {
+            return false;
+        }
+        for (var i = 0; i < zones.length; i++) {
+            zones[i].addBody(body);
+        }
+        return true;
+    };
+
+    var removeBodyFromZones = function(body) {
+        var zones = self.getZones(body);
+        for (var i = 0; i < zones.length; i++) {
+            zones[i].removeBody(body);
+        }
+    };
+
     var move = function(body, endX, endY) {
         var lastX = body.x;
         var lastY = body.y;
@@ -119,6 +130,7 @@ OGE.World = function(width, height, zoneSize) {
         while (body.x << 0 != endX || body.y << 0 != endY) {
             lastX = body.x;
             lastY = body.y;
+            removeBodyFromZones(body);
             body.x += body.x << 0 != endX ? xDiff : 0;
             body.y += body.y << 0 != endY ? yDiff : 0;
             // Have to do this since zones can change when moving the body
@@ -131,10 +143,12 @@ OGE.World = function(width, height, zoneSize) {
                     if (collide1 && collide2) {
                         body.x = lastX;
                         body.y = lastY;
+                        addBodyToZones(body);
                         return;
                     }
                 }
             }
+            addBodyToZones(body);
         }
     };
 

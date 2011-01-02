@@ -199,10 +199,13 @@ describe("World", function() {
             count++;
         });
 
+        expect(w.zones[0][0].bodies).toContain(b);
         w.addBody(new OGE.Body(30, 0, 10, 10));
         w.step();
         expect(count).toEqual(1);
         expect(b.x).toEqual(20);
+        expect(w.zones[0][0].bodies).not.toContain(b);
+        expect(w.zones[2][0].bodies).toContain(b);
     });
 
     it("should make bodies slide if they have the slide property set to true", function() {
