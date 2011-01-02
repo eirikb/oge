@@ -48,12 +48,16 @@ describe("World", function() {
         expect(world2.addBody(b)).toBeTruthy();
         expect(world2.activeBodies.length).toEqual(0);
         b.setActive(true);
+        expect(world2.activeBodies).toContain(b);
         expect(world2.activeBodies.length).toEqual(1);
         var b2 = new OGE.Body(1, 2, 3, 4);
         b2.setActive(true);
+        expect(world2.activeBodies).not.toContain(b2);
         expect(world2.addBody(b2)).toBeTruthy();
+        expect(world2.activeBodies).toContain(b2);
         expect(world2.activeBodies.length).toEqual(2);
         b2.setActive(false);
+        expect(world2.activeBodies).not.toContain(b2);
         expect(world2.activeBodies.length).toEqual(1);
     });
 
