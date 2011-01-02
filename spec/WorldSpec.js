@@ -2,11 +2,28 @@ describe("World", function() {
     var world1;
     var world2;
     var world3;
+    var w;
+    var b1;
+    var b2;
+    var b3
 
     beforeEach( function() {
         world1 = new OGE.World(1, 2);
         world2 = new OGE.World(100, 100, 10);
         world3 = new OGE.World();
+
+        w = new OGE.World(100, 100);
+        b1 = new OGE.Body(0, 0, 10, 10);
+        w.addBody(b1);
+        b1.setActive(true);
+        b1.speed = 1;
+        b1.direction = new OGE.Direction(1, 0);
+
+        b2 = new OGE.Body(15, 0, 10, 10);
+        w.addBody(b2);
+
+        b3 = new OGE.Body(15, 10, 10, 10);
+        w.addBody(b3);
     });
 
     it("should have width and height", function() {
@@ -122,16 +139,12 @@ describe("World", function() {
     });
 
     it("should move active bodies when stepping", function() {
-        var w = new OGE.World(100, 100);
-        var b1 = new OGE.Body(0, 0, 10, 10);
-        w.addBody(b1);
-        b1.setActive(true);
-        b1.speed = 1;
-        b1.direction = new OGE.Direction(1, 0);
+        w.step();
+        expect(b1.x).toEqual(1);
+        expect(b1.y).toEqual(0);
+    });
 
-        var b2 = new OGE.Body(15, 0, 10, 10);
-        w.addBody(b2);
-
+    it("should collide bodies and ignore based on collide events", function() {
         w.step();
         expect(b1.x).toEqual(1);
         expect(b1.y).toEqual(0);
@@ -141,26 +154,37 @@ describe("World", function() {
             count++;
         });
 
-        b1.onCollision( function() {
-            count++;
-        });
-
         b2.onCollision( function() {
             count++;
         });
 
-        b2.onCollision( function() {
+        b3.onCollision( function() {
             count++;
-        });
+            return false;
+        })
 
         for (var i = 0; i < 4; i++) {
             w.step();
         }
 
+        expect(b1.x).toEqual(5);
         expect(count).toEqual(0);
         w.step();
-        expect(count).toEqual(4);
+        expect(b1.x).toEqual(5);
+        expect(count).toEqual(2);
 
+        b1.direction = new OGE.Direction(0, 1);
+
+        for (var i = 0; i < 10; i++) {
+            w.step();
+        }
+        expect(b1.x).toEqual(5);
+        expect(b1.y).toEqual(10);
+
+        b1.direction = new OGE.Direction(1, 0);
+        w.step();
+        expect(b1.x).toEqual(6);
+        expect(count).toEqual(4);
     });
 
 });

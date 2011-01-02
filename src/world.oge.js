@@ -128,10 +128,9 @@ OGE.World = function(width, height, zoneSize) {
             for(var i = 0; i < bodies.length; i++) {
                 var body2 = bodies[i];
                 if (!body2.checkCollision(body) && body2.checkCollision(x, y, body.width, body.height)) {
-                    console.log("COL")
-                    body.collide(body2);
-                    body2.collide(body);
-                    return;
+                    if (body.collide(body2) && body2.collide(body)) {
+                        return;
+                    }
                 }
                 body.x = x;
                 body.y = y;

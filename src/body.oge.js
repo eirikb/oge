@@ -52,9 +52,13 @@ OGE.Body = function(x, y, width, height) {
     };
 
     this.collide = function(body) {
+        var collide = true;
         for (var i = 0; i < onCollision.length; i++) {
-            onCollision[i](body);
+            if (onCollision[i](body) === false) {
+                collide = false;
+            }
         }
+        return collide;
     };
 
     this.checkCollision = function(x, y, width, height) {
