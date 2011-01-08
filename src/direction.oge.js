@@ -4,6 +4,13 @@ OGE.Direction = function(cos, sin) {
     this.cos = typeof (cos) != 'undefined' ? cos : 0;
     this.sin = typeof (sin) != 'undefined' ? sin : 0;
 
+    this.isHorizontal = function() {
+	    return Math.abs(cos) > Math.abs(sin);
+    };
+
+    this.isVeritcal = function() {
+	    return !this.isHorizontal();
+    };
 };
 
 OGE.Direction.create = function(x1, y1, x2, y2) {
