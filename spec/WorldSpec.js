@@ -46,19 +46,23 @@ describe("World", function() {
 
         var b = new OGE.Body(1, 2, 3, 4);
         expect(world2.addBody(b)).toBeTruthy();
-        expect(world2.getBodies(b).length).toEqual(0);
+        expect(world2.getBodies(b).length).toEqual(1);
+        expect(world2.getBodies(b.x, b.y, b.width, b.height).length).toEqual(1);
         var b2 = new OGE.Body(5, 2, 3, 4);
         expect(world2.addBody(b2)).toBeTruthy();
-        expect(world2.getBodies(b).length).toEqual(1);
-        expect(world2.getBodies(b)[0]).toBe(b2);
+        expect(world2.getBodies(b).length).toEqual(2);
+        expect(world2.getBodies(b)).toContain(b2);
+        expect(world2.getBodies(b)).toContain(b);
+        expect(world2.getBodies(b.x, b.y, b.width, b.height)).toContain(b2);
+        expect(world2.getBodies(b.x, b.y, b.width, b.height)).toContain(b);
 
         world2.addBody(new OGE.Body(1, 1, 1, 1));
-        expect(world2.getBodies(b).length).toEqual(2);
+        expect(world2.getBodies(b).length).toEqual(3);
 
         world2.removeBody(b);
         // This might seem strange, although the bodies are found by x and y of the given body
-        expect(world2.getBodies(b).length).toEqual(1);
-        expect(world2.getBodies(b2).length).toEqual(1);
+        expect(world2.getBodies(b).length).toEqual(2);
+        expect(world2.getBodies(b2).length).toEqual(2);
     });
 
     it("should keep track of active bodies", function() {
@@ -82,12 +86,17 @@ describe("World", function() {
     it("should keep track of bodies within zones", function() {
         var w = new OGE.World(35, 35);
         expect(w.getZones(new OGE.Body(5, 5, 5, 5)).length).toEqual(1);
+        expect(w.getZones(5, 5, 5, 5).length).toEqual(1);
         expect(w.getZones(new OGE.Body(5, 5, 6, 5)).length).toEqual(2);
+        expect(w.getZones(5, 5, 6, 5).length).toEqual(2);
         expect(w.getZones(new OGE.Body(5, 5, 6, 6)).length).toEqual(4);
+        expect(w.getZones(5, 5, 6, 6).length).toEqual(4);
         var b1 = new OGE.Body(5, 5, 5, 5);
         w.addBody(b1);
         expect(w.getZones(b1).length).toEqual(1);
+        expect(w.getZones(b1.x, b1.y, b1.width, b1.height).length).toEqual(1);
         expect(w.getZones(b1)[0].bodies).toContain(b1);
+        expect(w.getZones(b1.x, b1.y, b1.width, b1.height)[0].bodies).toContain(b1);
         var b2 = new OGE.Body(5, 5, 10, 16);
         w.addBody(b2);
         expect(w.getZones(b2).length).toEqual(6);
@@ -123,19 +132,20 @@ describe("World", function() {
 
         var p1 = new Person(1, 2, 3, 4, "p1");
         expect(world2.addBody(p1)).toBeTruthy();
-        expect(world2.getBodies(p1).length).toEqual(0);
+        expect(world2.getBodies(p1).length).toEqual(1);
+        expect(world2.getBodies(p1.x, p1.y, p1.width, p1.height).length).toEqual(1);
         var p2 = new Person(5, 2, 3, 4, "p2");
         expect(world2.addBody(p2)).toBeTruthy();
-        expect(world2.getBodies(p1).length).toEqual(1);
-        expect(world2.getBodies(p1)[0]).toBe(p2);
+        expect(world2.getBodies(p1).length).toEqual(2);
+        expect(world2.getBodies(p1)).toContain(p2);
 
         world2.addBody(new Person(1, 1, 1, 1));
-        expect(world2.getBodies(p1).length).toEqual(2);
+        expect(world2.getBodies(p1).length).toEqual(3);
 
         world2.removeBody(p1);
         // This might seem strange, although the bodies are found by x and y of the given body
-        expect(world2.getBodies(p1).length).toEqual(1);
-        expect(world2.getBodies(p2).length).toEqual(1);
+        expect(world2.getBodies(p1).length).toEqual(2);
+        expect(world2.getBodies(p2).length).toEqual(2);
     });
 
     it("should move active bodies when stepping", function() {
@@ -211,19 +221,35 @@ describe("World", function() {
     it("should make bodies slide if they have the slide property set to true", function() {
         var w = new OGE.World(1000, 1000);
         var b = new OGE.Body(0, 0, 13, 12);
+	w.addBody(b);
+	b.setActive(true);
+	b.speed = 3;
+	b.slide = true;
+b.direction = new OGE.Direction(1, 0);
+
         for (var i = 0; i < 7; i++) {
             w.addBody(new OGE.Body(20 + i * 11, 0 + i * 11, 11, 11));
         }
-        b.direction = new OGE.Direction(1, 0);
-        b.speed = 3;
-
+        
         var count = 0;
         b.onCollision( function() {
             count++;
         });
 
         w.step();
+	posCheck(b, 3, 0);
+w.step();
+posCheck(b, 6, 0);
+	w.step();
+posCheck(b, 7, 0);
+//	w.step();
+//	posCheck(b, 7, 3);
 
     });
+
+    var posCheck = function(body, expectedX, expectedY) {
+	   expect(body.x).toBe(expectedX);
+	   expect(body.y).toBe(expectedY);
+	}
 
 });
