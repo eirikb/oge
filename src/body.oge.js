@@ -9,6 +9,7 @@ OGE.Body = function(x, y, width, height) {
 
     this.speed = 0;
     this.direction = null;
+    this.slide = false;
 
     var active = false;
 

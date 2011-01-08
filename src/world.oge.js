@@ -98,7 +98,7 @@ OGE.World = function(width, height, zoneSize) {
             if (body.speed > 0 && body.direction !== null) {
                 var endX = body.x + body.direction.cos * body.speed << 0;
                 var endY = body.y + body.direction.sin * body.speed << 0;
-                move(body, endX, endY);
+                moveBody(body, endX, endY);
             }
         }
 
@@ -122,7 +122,7 @@ OGE.World = function(width, height, zoneSize) {
         }
     };
 
-    var move = function(body, endX, endY) {
+    var moveBody = function(body, endX, endY) {
         var lastX = body.x;
         var lastY = body.y;
         var xDiff = body.x < endX ? 1 : -1;
@@ -143,12 +143,23 @@ OGE.World = function(width, height, zoneSize) {
                     if (collide1 && collide2) {
                         body.x = lastX;
                         body.y = lastY;
+                        if (body.slide) {
+                            slideBody(body);
+                        }
                         addBodyToZones(body);
                         return;
                     }
                 }
             }
             addBodyToZones(body);
+        }
+    };
+
+    var slideBody = function(body) {
+        var cos = body.direction.cos;
+        var sin = body.direction.sin;
+        if (Math.abs(cos) > Math.abs(sin)) {
+          
         }
     };
 
