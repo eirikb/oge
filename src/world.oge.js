@@ -112,9 +112,7 @@ OGE.World = function(width, height, zoneSize) {
 		for (var i = 0; i < this.activeBodies.length; i++) {
 			var body = this.activeBodies[i];
 			if (body.speed > 0 && body.direction !== null) {
-				var endX = body.x + body.direction.cos * body.speed << 0;
-				var endY = body.y + body.direction.sin * body.speed << 0;
-				moveBody(body, endX, endY);
+				moveBody(body);
 			}
 		}
 
@@ -135,14 +133,26 @@ OGE.World = function(width, height, zoneSize) {
 		var zones = self.getZones(body);
 		for (var i = 0; i < zones.length; i++) {
 			zones[i].removeBody(body);
+			length = body.speed;
 		}
 	};
 
-	var moveBody = function(body, endX, endY) {
+	var moveBody = function(body, direction, length) {
+		if (arguments.length === 1) {
+			direction = body.direction;
+			length = body.speed;
+		}
+		if (length  <= 0) {
+			return;
+		}
+		var endX = body.x + direction.cos * length << 0;
+		var endY = body.y + direction.sin * length << 0;
 		var lastX = body.x;
 		var lastY = body.y;
 		var xDiff = body.x < endX ? 1 : -1;
 		var yDiff = body.y < endY ? 1 : -1;
+
+
 		while (body.x << 0 != endX || body.y << 0 != endY) {
 			lastX = body.x;
 			lastY = body.y;
@@ -160,7 +170,7 @@ OGE.World = function(width, height, zoneSize) {
 						body.x = lastX;
 						body.y = lastY;
 						if (body.slide) {
-							slideBody(body);
+							slideBody(body, direction, length);
 						}
 						addBodyToZones(body);
 						return;
@@ -168,20 +178,57 @@ OGE.World = function(width, height, zoneSize) {
 				}
 			}
 			addBodyToZones(body);
+			length--;
 		}
 	};
 
-	var slideBody = function(body) {
-		var cos = body.direction.cos;
-		var sin = body.direction.sin;
+	var slideBody = function(body, direction, length) {
+		var cos = direction.cos;
+		var sin = direction.sin;
+		var cornerX1, cornerY1, cornerX2, cornerY2, direction1, direction2;
+		var hits = function(x, y) {
+			var bodies = self.getBodies(x, y, 1, 1);
+			for (var i = 0; i < bodies.length; i++){
+				var b = bodies[i];
+				if(b.x + b.width >= x && b.x <= x
+						&& b.y + b.height >= y && b.y <= y)  {
+					return true;
+				}
+			}
+			return false;
+		};
+
 		if (Math.abs(cos) > Math.abs(sin)) {
-			console.log("Slide! :D");
-			// Check upper bounds
-
-
-
-
+			if (cos > 0 ) {
+				cornerX1 = cornerX2 = body.x + body.width + 1;
+			} else {
+				cornerX1 = cornerX2 = body.x - 1;
+			}
+			cornerY1 = body.y;
+			cornerY1 = body.y + body.height;
+			direction1 = new OGE.Direction(0, 1);
+			direction2 = new OGE.Direction(0, -1);
+		} else {
+			if (sin > 0 ) {
+				cornerY1 = cornerY2 = body.y + body.height + 1;
+			} else {
+				cornerY1 = cornerY2 = body.y - 1;
+			}
+			cornerX1 = body.x;
+			cornerX2 = body.x + body.width;
+			direction1 = new OGE.Direction(1, 0);
+			direction2 = new OGE.Direction(-1, 0);
 		}
+		var corner1 = hits(cornerX1, cornerY1);
+		var corner2 = hits(cornerX2, cornerY2);
+		if (corner1 && corner2) {
+			return;
+		} else if (!corner1) {
+			direction = direction1;
+		} else if (!corner2) {
+			direction = direction2;
+		}
+		moveBody(body, direction, length - 1);
 	};
 
 }
