@@ -62,9 +62,10 @@ OGE.Body = function(x, y, width, height) {
         return collide;
     };
 
-    this.checkCollision = function(x, y, width, height) {
-        if (arguments.length == 1) {
-            var body = x;
+    this.intersects = function(bodyOrX, y, width, height) {
+        var x, body;
+        x = body = bodyOrX;
+        if (arguments.length === 1) {
             x = body.x;
             y = body.y;
             width = body.width;
@@ -72,9 +73,27 @@ OGE.Body = function(x, y, width, height) {
         }
 
         return this.x < x + width
-        && this.x + this.width > x
-        && this.y < y + height
-        && this.y + this.height > y;
+            && this.x + this.width > x
+            && this.y < y + height
+            && this.y + this.height > y;
+    };
+
+    this.intersection = function(bodyOrX, y, width, height) {
+        var x, body;
+        x = body = bodyOrX;
+        if (arguments.length === 1) {
+            x = body.x;
+            y = body.y;
+            width = body.width;
+            height = body.height;
+        }
+
+        var sx, ex, sy, ey;
+        sx = this.x > x ? this.x : x;
+        ex = this.x + this.width < x + width ? this.x + this.width : x + width;
+        sy = this.y > y ? this.y : y;
+        ey = this.y + this.height < y + height ? this.y + this.width : y + height; 
+        return (ex - sx) * (ey - sy);
     };
 
 }

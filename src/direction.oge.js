@@ -4,12 +4,15 @@ OGE.Direction = function(cos, sin) {
     this.cos = typeof (cos) != 'undefined' ? cos : 0;
     this.sin = typeof (sin) != 'undefined' ? sin : 0;
 
-    this.isHorizontal = function() {
-	    return Math.abs(cos) > Math.abs(sin);
+    this.rotate = function(degrees) {
+        var radian = degrees * (Math.PI / 180);
+        this.cos = Math.cos(Math.acos(this.cos) + radian);
+        this.sin = Math.sin(Math.asin(this.sin) + radian);
+        return this;
     };
 
-    this.isVeritcal = function() {
-	    return !this.isHorizontal();
+    this.clone = function() {
+        return new OGE.Direction(this.cos, this.sin);
     };
 };
 
@@ -21,4 +24,3 @@ OGE.Direction.create = function(x1, y1, x2, y2) {
     var cos = b / h;
     return new OGE.Direction(cos, sin);
 };
-

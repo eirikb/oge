@@ -109,13 +109,21 @@ describe("Body", function() {
         var b1 = new OGE.Body(0, 0, 10, 10);
         var b2 = new OGE.Body(5, 5, 10, 10);
         var b3 = new OGE.Body(10, 10, 10, 10);
-        expect(b1.checkCollision(b2)).toBeTruthy();
-        expect(b1.checkCollision(5, 5, 10, 10)).toBeTruthy();
-        expect(b2.checkCollision(b1)).toBeTruthy();
-        expect(b1.checkCollision(b3)).toBeFalsy();
-        expect(b3.checkCollision(b2)).toBeTruthy();
-        expect(b3.checkCollision(b1)).toBeFalsy();
-        expect(b3.checkCollision(0, 0, 10, 10)).toBeFalsy();
+        expect(b1.intersects(b2)).toBeTruthy();
+        expect(b1.intersects(5, 5, 10, 10)).toBeTruthy();
+        expect(b2.intersects(b1)).toBeTruthy();
+        expect(b1.intersects(b3)).toBeFalsy();
+        expect(b3.intersects(b2)).toBeTruthy();
+        expect(b3.intersects(b1)).toBeFalsy();
+        expect(b3.intersects(0, 0, 10, 10)).toBeFalsy();
+    });
+
+    it("should be possible to calculate the intersection size bwtween bodies", function() {
+        var b1 = new OGE.Body(0, 0, 10, 10);
+        expect(b1.intersection(9, 0, 10, 10)).toBe(10);
+        expect(b1.intersection(8, 0, 10, 11)).toBe(20);
+        expect(b1.intersection(7, 0, 2, 14)).toBe(20);
+        expect(b1.intersection(5, 5, 5, 5)).toBe(25);
     });
 
 });
