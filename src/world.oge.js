@@ -95,9 +95,9 @@ OGE.World = function(width, height, zoneSize) {
         if (x >= 0 && x + width - 1 < this.width
                 && y >= 0 && y + height -  1 < this.height) {
             var x1 = x / this.zoneSize << 0;
-            var x2 = (x + width - 1) / this.zoneSize << 0;
+            var x2 = (x + width) / this.zoneSize << 0;
             var y1 = y / this.zoneSize << 0;
-            var y2 = (y + height - 1) / this.zoneSize << 0;
+            var y2 = (y + height) / this.zoneSize << 0;
 
             var pos = 0;
             var z = new Array((x2 - x1) * (y2 - y1) + 1);
@@ -165,10 +165,10 @@ OGE.World = function(width, height, zoneSize) {
                     if (collide1 && collide2) {
                         body.x = lastX;
                         body.y = lastY;
-                        if (body.slide && steps - j - 1 > 0) {
+                        addBodyToZones(body);
+                        if (body.slide && steps - j > 0) {
                             slideBody(body, direction);
                         }  else {
-                            addBodyToZones(body);
                             return;
                         }
                     }

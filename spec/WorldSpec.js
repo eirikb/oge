@@ -85,16 +85,17 @@ it("should keep track of active bodies", function() {
 
 it("should keep track of bodies within zones", function() {
     var w = new OGE.World(35, 35);
-    expect(w.getZones(new OGE.Body(5, 5, 5, 5)).length).toEqual(1);
-    expect(w.getZones(5, 5, 5, 5).length).toEqual(1);
-    expect(w.getZones(new OGE.Body(5, 5, 6, 5)).length).toEqual(2);
-    expect(w.getZones(5, 5, 6, 5).length).toEqual(2);
+    expect(w.getZones(20, 0, 11, 11).length).toEqual(4);
+    expect(w.getZones(new OGE.Body(5, 5, 5, 5)).length).toEqual(4);
+    expect(w.getZones(5, 5, 5, 5).length).toEqual(4);
+    expect(w.getZones(new OGE.Body(5, 5, 6, 5)).length).toEqual(4);
+    expect(w.getZones(5, 5, 6, 5).length).toEqual(4);
     expect(w.getZones(new OGE.Body(5, 5, 6, 6)).length).toEqual(4);
     expect(w.getZones(5, 5, 6, 6).length).toEqual(4);
     var b1 = new OGE.Body(5, 5, 5, 5);
     w.addBody(b1);
-    expect(w.getZones(b1).length).toEqual(1);
-    expect(w.getZones(b1.x, b1.y, b1.width, b1.height).length).toEqual(1);
+    expect(w.getZones(b1).length).toEqual(4);
+    expect(w.getZones(b1.x, b1.y, b1.width, b1.height).length).toEqual(4);
     expect(w.getZones(b1)[0].bodies).toContain(b1);
     expect(w.getZones(b1.x, b1.y, b1.width, b1.height)[0].bodies).toContain(b1);
     var b2 = new OGE.Body(5, 5, 10, 16);
@@ -111,6 +112,14 @@ it("should keep track of bodies within zones", function() {
     expect(w.addBody(b4)).toBeTruthy();
     var b5 = new OGE.Body(30, 0, 6, 5);
     expect(w.addBody(b5)).toBeFalsy();
+
+    var w2 = new OGE.World(100, 100);
+    var b22 = new OGE.Body(20, 0, 11, 11);
+    w2.addBody(b22);
+    expect(w2.zones[2][0].bodies).toContain(b22);
+    expect(w2.zones[2][1].bodies).toContain(b22);
+    expect(w2.zones[3][0].bodies).toContain(b22);
+    expect(w2.zones[3][1].bodies).toContain(b22);
 });
 
 it("should be possible to inherit body", function() {
@@ -246,8 +255,12 @@ it("should make bodies slide if they have the slide property set to true", funct
     posCheck(b, 7, 8);
     w.step(2);
     posCheck(b, 10, 11); 
-    //w.step(
-
+    w.step(2);
+    posCheck(b, 16, 11);
+    w.step();
+    posCheck(b, 18, 12);
+    w.step(2);
+    posCheck(b, 18, 18);
 });
 
 var posCheck = function(body, expectedX, expectedY) {
