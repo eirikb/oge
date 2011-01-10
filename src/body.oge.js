@@ -21,6 +21,11 @@ OGE.Body = function(x, y, width, height) {
         this.direction = OGE.Direction.create(this.x, this.y, x2, y2);
     };
 
+    this.clearEvents = function() {
+        onActivate = new Array();
+        onDeactive = new Array();
+    };
+
     this.isActive = function() {
         return active;
     };

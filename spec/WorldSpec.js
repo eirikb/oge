@@ -113,13 +113,17 @@ it("should keep track of bodies within zones", function() {
     var b5 = new OGE.Body(30, 0, 6, 5);
     expect(w.addBody(b5)).toBeFalsy();
 
-    var w2 = new OGE.World(100, 100);
-    var b22 = new OGE.Body(20, 0, 11, 11);
-    w2.addBody(b22);
-    expect(w2.zones[2][0].bodies).toContain(b22);
-    expect(w2.zones[2][1].bodies).toContain(b22);
-    expect(w2.zones[3][0].bodies).toContain(b22);
-    expect(w2.zones[3][1].bodies).toContain(b22);
+    var w21 = new OGE.World(100, 100);
+    var b21 = new OGE.Body(20, 0, 11, 11);
+    w21.addBody(b21);
+    expect(w21.zones[2][0].bodies).toContain(b21);
+    expect(w21.zones[2][1].bodies).toContain(b21);
+    expect(w21.zones[3][0].bodies).toContain(b21);
+    expect(w21.zones[3][1].bodies).toContain(b21);
+
+    var b22 = new OGE.Body(35, 25, 10, 10);
+    w21.addBody(b22);
+    expect(w21.getBodies(25, 20, 10, 10)).toContain(b22);
 });
 
 it("should be possible to inherit body", function() {
@@ -263,6 +267,136 @@ it("should make bodies slide if they have the slide property set to true", funct
     posCheck(b, 18, 21);
     w.step();
     posCheck(b, 20, 22);
+    w.step(3);
+    posCheck(b, 29, 22);
+    w.step();
+    posCheck(b, 29, 25);
+    w.step(2);
+    posCheck(b, 29, 31);
+    w.step();
+    posCheck(b, 30, 33);
+    w.step(2);
+    posCheck(b, 36, 33);
+});
+
+it("should be possible to slide between bodies", function() {
+    var w = new OGE.World(1000, 1000);
+    var b = new OGE.Body(5, 8, 11, 11);
+    w.addBody(b);
+    b.setActive(true);
+    b.speed = 3;
+    b.slide = true;
+    b.direction = new OGE.Direction(1, 0);
+
+    w.addBody(new OGE.Body(20, 0, 11, 11));
+    w.addBody(new OGE.Body(20, 22, 11, 11));
+    w.step();
+    posCheck(b, 8, 8);
+    w.step();
+    posCheck(b, 9, 10);
+    w.step();
+    posCheck(b, 11, 11);
+});
+
+it("should slide regardless of direction", function() {
+    var w = new OGE.World(100, 100);
+    var b = new OGE.Body(0, 0, 10, 10);
+    w.addBody(b);
+    b.setActive(true);
+    b.speed = 3;
+    b.slide = true;
+
+    var reset = function(x, y, xDir, yDir) {
+        w.removeBody(b);
+        expect(w.getBodies(b)).not.toContain(b);
+        b.x = x;
+        b.y = y;
+        b.direction = new OGE.Direction(xDir, yDir);
+        w.addBody(b);
+        expect(w.getBodies(b)).toContain(b);
+    };
+
+    w.addBody(new OGE.Body(20, 20, 10, 10));
+
+    reset(5, 25, 1, 0);
+    w.step();
+    posCheck(b, 8, 25);
+    w.step();
+    posCheck(b, 10, 26);
+    w.step();
+    posCheck(b, 10, 29);
+    w.step();
+    posCheck(b, 12, 30);
+
+    reset(5, 15, 1, 0);
+    w.step();
+    posCheck(b, 8, 15);
+    w.step();
+    posCheck(b, 10, 14);
+    w.step();
+    posCheck(b, 10, 11);
+    w.step();
+    posCheck(b, 12, 10);
+
+    reset(15, 5, 0, 1);
+    w.step();
+    posCheck(b, 15, 8);
+    w.step();
+    posCheck(b, 14, 10);
+    w.step();
+    posCheck(b, 11, 10);
+    w.step();
+    posCheck(b, 10, 12);
+
+    reset(25, 5, 0, 1);
+    w.step();
+    posCheck(b, 25, 8);
+    w.step();
+    posCheck(b, 26, 10);
+    w.step();
+    posCheck(b, 29, 10);
+    w.step();
+    posCheck(b, 30, 12);
+
+    reset(35, 15, -1, 0);
+    w.step();
+    posCheck(b, 32, 15);
+    w.step();
+    posCheck(b, 30, 14);
+    w.step();
+    posCheck(b, 30, 11);
+    w.step();
+    posCheck(b, 28, 10);
+
+    reset(35, 25, -1, 0);
+    w.step();
+    posCheck(b, 32, 25);
+    w.step();
+    posCheck(b, 30, 26);
+    w.step();
+    posCheck(b, 30, 29);
+    w.step();
+    posCheck(b, 28, 30);
+
+    reset(25, 35, 0, -1);
+    w.step();
+    posCheck(b, 25, 32);
+    w.step();
+    posCheck(b, 26, 30);
+    w.step();
+    posCheck(b, 29, 30);
+    w.step();
+    posCheck(b, 30, 28);
+
+    reset(15, 35, 0, -1);
+    w.step();
+    posCheck(b, 15, 32);
+    w.step();
+    posCheck(b, 14, 30);
+    w.step();
+    posCheck(b, 11, 30);
+    w.step();
+    posCheck(b, 10, 28);
 });
 
 var posCheck = function(body, expectedX, expectedY) {

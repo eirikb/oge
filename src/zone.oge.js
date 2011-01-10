@@ -8,12 +8,21 @@ OGE.Zone = function(x, y) {
 
     this.addBody = function(body) {
         OGE.assert(body instanceof OGE.Body, "Argument not instance of OGE.Body");
+        for (var i = 0; i < this.bodies.length; i++) {
+            if (this.bodies[i] === body) {
+                return;
+            }
+        }
         this.bodies.push(body);
     };
 
     this.removeBody = function(body) {
         OGE.assert(body instanceof OGE.Body, "Argument not instance of OGE.Body");
-        this.bodies.pop(body);
+        for (var i = 0; i < this.bodies.length; i++) {
+            if (this.bodies[i] === body) {
+                this.bodies.splice(i, 1);
+                break;
+            }
+        }
     };
-
 }

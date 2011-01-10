@@ -31,12 +31,19 @@ OGE.World = function(width, height, zoneSize) {
             this.activeBodies.push(body);
         }
 
+        body.clearEvents();
+
         body.onActive( function() {
             self.activeBodies.push(body);
         });
 
         body.onDeactive( function() {
-            self.activeBodies.pop(body);
+            for (var i = 0; i < self.activeBodies.length; i++) {
+                if (self.activeBodies[i] === body) {
+                    self.activeBodies.splice(i, 1);
+                    break;
+                }
+            }
         });
 
         return true;
@@ -44,6 +51,13 @@ OGE.World = function(width, height, zoneSize) {
 
     this.removeBody = function(body) {
         removeBodyFromZones(body);
+        for (var i = 0; i < self.activeBodies.length; i++) {
+            if (self.activeBodies[i] === body) {
+                self.activeBodies.splice(i, 1);
+                break;
+            }
+        }
+
     };
 
     this.getBodies = function(bodyOrX, y, width, height) {
@@ -61,9 +75,9 @@ OGE.World = function(width, height, zoneSize) {
         y = y + height > this.height ? this.height - height : y;
 
         var bodies = new Array();
-        var zones2 = this.getZones(x, y, width, height);
-        for (var i = 0; i < zones2.length; i++) {
-            var bodies2 = zones2[i].bodies;
+        var zones = this.getZones(x, y, width, height);
+        for (var i = 0; i < zones.length; i++) {
+            var bodies2 = zones[i].bodies;
             for (var j = 0; j < bodies2.length; j++) {
                 var b = bodies2[j];
                 var contains = false;
