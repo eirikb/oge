@@ -1,6 +1,4 @@
 OGE.Direction = function(cos, sin) {
-    OGE.assert(this instanceof arguments.callee, "Constructor called as a function");
-
     this.cos = typeof (cos) != 'undefined' ? cos : 0;
     this.sin = typeof (sin) != 'undefined' ? sin : 0;
 

@@ -12,18 +12,6 @@
 
 var OGE = {};
 
-//
-// This function is suppose to be removed for production, as well as the calls
-//
-OGE.assert = function (expr, msg) {
-    if (!msg) {
-        msg = 'Assertion failed';
-    }
-    if (!expr) {
-        throw new Error(msg);
-    }
-}
-
 // Prevent protoype inheritance from calling constructors twice when using apply
 // Thanks to eboyjr (##javascript @ freenode)
 Object.construct_prototype = function(o) {
@@ -31,5 +19,5 @@ Object.construct_prototype = function(o) {
     };
 
     f.prototype = o.prototype;
-    return new f;
+    return new f();
 };

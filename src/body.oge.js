@@ -1,7 +1,4 @@
 OGE.Body = function(x, y, width, height) {
-
-    OGE.assert(this instanceof arguments.callee, "Constructor called as a function");
-
     this.x = typeof (x) != 'undefined' ? x : 0;
     this.y = typeof (y) != 'undefined' ? y : 0;
     this.width = typeof (width) != 'undefined' ? width : 1;
@@ -13,17 +10,17 @@ OGE.Body = function(x, y, width, height) {
 
     var active = false;
 
-    var onActive = new Array();
-    var onDeactive = new Array();
-    var onCollision = new Array();
+    var onActive = [];
+    var onDeactive = [];
+    var onCollision = [];
 
     this.setDirection = function(x2, y2) {
         this.direction = OGE.Direction.create(this.x, this.y, x2, y2);
     };
 
     this.clearEvents = function() {
-        onActivate = new Array();
-        onDeactive = new Array();
+        onActivate = [];
+        onDeactive = [];
     };
 
     this.isActive = function() {
@@ -38,8 +35,8 @@ OGE.Body = function(x, y, width, height) {
                     onActive[i]();
                 }
             } else {
-                for (var i = 0; i < onDeactive.length; i++) {
-                    onDeactive[i]();
+                for (var j = 0; j < onDeactive.length; j++) {
+                    onDeactive[j]();
                 }
             }
         }
@@ -77,10 +74,10 @@ OGE.Body = function(x, y, width, height) {
             height = body.height;
         }
 
-        return this.x < x + width
-            && this.x + this.width > x
-            && this.y < y + height
-            && this.y + this.height > y;
+        return this.x < x + width &&
+            this.x + this.width > x &&
+            this.y < y + height && 
+            this.y + this.height > y;
     };
 
     this.intersection = function(bodyOrX, y, width, height) {
@@ -101,4 +98,4 @@ OGE.Body = function(x, y, width, height) {
         return (ex - sx) * (ey - sy);
     };
 
-}
+};

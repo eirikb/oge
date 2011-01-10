@@ -1,28 +1,23 @@
 OGE.World = function(width, height, zoneSize) {
-
-    OGE.assert(this instanceof arguments.callee, "Constructor called as a function");
-
     this.width = typeof (width) != 'undefined' ? width : 640;
     this.height = typeof (height) != 'undefined' ? height : 480;
     this.zoneSize = typeof(zoneSize) != 'undefined' ? zoneSize : 10;
-    this.activeBodies = new Array();
+    this.activeBodies = [];
 
     var xZones = width / this.zoneSize + 1 << 0;
     var yZones = height / this.zoneSize + 1 << 0;
-    this.zones = new Array(xZones);
+    this.zones = [];
 
     var self = this;
 
     for (var x = 0; x < xZones; x++) {
-        this.zones[x] = new Array(yZones);
+        this.zones[x] = [];
         for (var y = 0; y < yZones; y++) {
             this.zones[x][y] = new OGE.Zone(x, y);
         }
-    };
+    }
 
     this.addBody = function(body) {
-        OGE.assert(body instanceof OGE.Body, "argument not instance of OGE.Body");
-
         if (addBodyToZones(body) !== true) {
             return false;
         }
@@ -74,7 +69,7 @@ OGE.World = function(width, height, zoneSize) {
         y = y < 0 ? 0 : y;
         y = y + height > this.height ? this.height - height : y;
 
-        var bodies = new Array();
+        var bodies = [];
         var zones = this.getZones(x, y, width, height);
         for (var i = 0; i < zones.length; i++) {
             var bodies2 = zones[i].bodies;
@@ -106,23 +101,23 @@ OGE.World = function(width, height, zoneSize) {
             height = body.height;
         }
 
-        if (x >= 0 && x + width - 1 < this.width
-                && y >= 0 && y + height -  1 < this.height) {
+        if (x >= 0 && x + width - 1 < this.width &&
+                y >= 0 && y + height -  1 < this.height) {
             var x1 = x / this.zoneSize << 0;
             var x2 = (x + width) / this.zoneSize << 0;
             var y1 = y / this.zoneSize << 0;
             var y2 = (y + height) / this.zoneSize << 0;
 
             var pos = 0;
-            var z = new Array((x2 - x1) * (y2 - y1) + 1);
-            for (var x = x1; x <= x2; x++) {
-                for (var y = y1; y <= y2; y++) {
+            var z = [];
+            for (x = x1; x <= x2; x++) {
+                for (y = y1; y <= y2; y++) {
                     z[pos++] = this.zones[x][y];
                 }
             }
             return z;
         } else {
-            return new Array(0);
+            return [];
         }
     };
 
@@ -215,5 +210,4 @@ OGE.World = function(width, height, zoneSize) {
             moveBody(body, direction.clone().rotate(90), 1);
         }
     };
-
-}
+};
