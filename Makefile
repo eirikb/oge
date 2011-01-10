@@ -1,29 +1,15 @@
 SRC_DIR = src
-TEST_DIR = spec
 LIB_DIR = lib
-JASMINE_DIR = ${LIB_DIR}/jasmine
-ENV_DIR = env
 
-V8 = /home/eirikb/v8/v8-shell
-
-BASE_FILES = ${SRC_DIR}/base.js\
+BASE_FILES = ${SRC_DIR}/base.oge.js\
 			 ${SRC_DIR}/world.oge.js\
 			 ${SRC_DIR}/direction.oge.js\
 			 ${SRC_DIR}/body.oge.js
-TEST_FILES = ${TEST_DIR}/*.js
-SPECRUNNER_FILE = SpecRunner.js
-ENV_FILES = ${ENV_DIR}/env.js\
-            ${ENV_DIR}/dom.js\
-            ${ENV_DIR}/event.js\
-            ${ENV_DIR}/html.js\
-            ${ENV_DIR}/timer.js\
-            ${ENV_DIR}/parser.js\
-            ${ENV_DIR}/window.js 
-JASMINE_FILES = ${JASMINE_DIR}/lib/jasmine.js\
-				${LIB_DIR}/jasmine-print.js
 
-test:
-	${V8} ${ENV_FILES} ${JASMINE_FILES} ${BASE_FILES} ${TEST_FILES} ${SPECRUNNER_FILE}
+JSLINT4JAVA = ${LIB_DIR}/jslint4java-1.4.6.jar
+
+lint:
+	java -jar ${JSLINT4JAVA} ${BASE_FILES}
 
 update:
 	$(call clone_or_pull, ${JASMINE_DIR}, https://github.com/pivotal/jasmine.git)
@@ -40,4 +26,4 @@ define clone_or_pull
 
 endef
 
-.PHONY: all update test
+.PHONY: all update lint
