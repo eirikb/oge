@@ -259,8 +259,10 @@ it("should make bodies slide if they have the slide property set to true", funct
     posCheck(b, 16, 11);
     w.step();
     posCheck(b, 18, 12);
-    w.step(2);
-    posCheck(b, 18, 18);
+    w.step(3);
+    posCheck(b, 18, 21);
+    w.step();
+    posCheck(b, 20, 22);
 });
 
 var posCheck = function(body, expectedX, expectedY) {
