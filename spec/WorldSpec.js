@@ -40,10 +40,6 @@ it("should have width and height", function() {
 });
 
 it("should be possible to add bodies, and only bodies to a world", function() {
-    expect( function() {
-        world3.addBody("test")
-    }).toThrow(new Error("argument not instance of OGE.Body"));
-
     var b = new OGE.Body(1, 2, 3, 4);
     expect(world2.addBody(b)).toBeTruthy();
     expect(world2.getBodies(b).length).toEqual(1);
