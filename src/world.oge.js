@@ -186,7 +186,7 @@ OGE.World = function(width, height, zoneSize) {
             var bodies = self.getBodies(x, y, body.width, body.height);
             for (var i = 0; i < bodies.length; i++) {
                 var body2 = bodies[i];
-                if (body2 !== body && body2.intersects(x, y, width, height)) {
+                if (body2 !== body && body2.intersects(x, y, body.width, body.height)) {
                     intersection += body2.intersection(x, y, body.width, body.height);
                 }
             } 
