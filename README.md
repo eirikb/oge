@@ -5,15 +5,16 @@ This is a simple, fast and small engine for overworld typed games, it will handl
 The only features are collision detection and sliding bodies when colliding.
   
 ### Files
- * <b>lib</b>
-   * <b>lib/compiler.jar</b>: Google Closure Compiler for compiling
- * <b>lib/jslint4java-1.4.6.jar</b>: Java version of JSLint, for checking the source
 
- * <b>spec/*.js</b>: Spec files, the main tests
-
- * <b>src/base.oge.js</b>: Have to be first file, others depend on it
- * <b>src/*.js</b>: Source files
-
+ * <b>src</b>: Source files
+   * <b>base.oge.js</b>: Have to be first file, others depend on it
+ * <b>spec</b>: Spec files, main tests
+ * <b>lib</b>: Libraries for testing and building
+   * <b>compiler.jar</b>: Google Closure Compiler for compiling
+   * <b>jslint4java-1.4.6.jar</b>: Java version of JSLint, for checking the source
+ * <b>dist</b>: Built and ready to use files
+   * <b>oge.js</b>: Bundled version of the source, readable
+   * <b>oge.min.js</b>: Compiled version (Google Closure Compiler)
  * <b>Makefile</b>: Testing and pulling dependent test framework
  * <b>SpecRunner.html</b>: For testing in browser
 
