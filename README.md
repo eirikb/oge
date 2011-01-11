@@ -5,7 +5,8 @@ This is a simple, fast and small engine for overworld typed games, it will handl
 The only features are collision detection and sliding bodies when colliding.
   
 ### Files
- * <b>lib/compiler.jar</b>: Google Closure Compiler for compiling
+ * <b>lib</b>
+   * <b>lib/compiler.jar</b>: Google Closure Compiler for compiling
  * <b>lib/jslint4java-1.4.6.jar</b>: Java version of JSLint, for checking the source
 
  * <b>spec/*.js</b>: Spec files, the main tests
