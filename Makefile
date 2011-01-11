@@ -3,9 +3,10 @@ LIB_DIR = lib
 DIST_DIR = dist
 
 BASE_FILES = ${SRC_DIR}/base.oge.js\
-			 ${SRC_DIR}/world.oge.js\
 			 ${SRC_DIR}/direction.oge.js\
-			 ${SRC_DIR}/body.oge.js
+			 ${SRC_DIR}/zone.oge.js\
+			 ${SRC_DIR}/body.oge.js\
+			 ${SRC_DIR}/world.oge.js
 JSLINT4JAVA = ${LIB_DIR}/jslint4java-1.4.6.jar
 CLOSURE_COMPILER = ${LIB_DIR}/compiler.jar
 OGE = ${DIST_DIR}/oge.js

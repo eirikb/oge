@@ -21,6 +21,156 @@ Object.construct_prototype = function(o) {
     f.prototype = o.prototype;
     return new f();
 };
+OGE.Direction = function(cos, sin) {
+    this.cos = typeof (cos) != 'undefined' ? cos : 0;
+    this.sin = typeof (sin) != 'undefined' ? sin : 0;
+
+    this.rotate = function(degrees) {
+        var radian = degrees * (Math.PI / 180);
+        this.cos = Math.cos(Math.acos(this.cos) + radian);
+        this.sin = Math.sin(Math.asin(this.sin) + radian);
+        return this;
+    };
+
+    this.clone = function() {
+        return new OGE.Direction(this.cos, this.sin);
+    };
+};
+
+OGE.Direction.create = function(x1, y1, x2, y2) {
+    var a =  y2 - y1;
+    var b = x2 - x1;
+    var h = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
+    var sin = a / h;
+    var cos = b / h;
+    return new OGE.Direction(cos, sin);
+};
+OGE.Zone = function(x, y) {
+
+    this.x = typeof (x) != 'undefined' ? x : 0;
+    this.y = typeof (y) != 'undefined' ? y : 0;
+
+    this.bodies = new Array();
+
+    this.addBody = function(body) {
+        for (var i = 0; i < this.bodies.length; i++) {
+            if (this.bodies[i] === body) {
+                return;
+            }
+        }
+        this.bodies.push(body);
+    };
+
+    this.removeBody = function(body) {
+        for (var i = 0; i < this.bodies.length; i++) {
+            if (this.bodies[i] === body) {
+                this.bodies.splice(i, 1);
+                break;
+            }
+        }
+    };
+}
+OGE.Body = function(x, y, width, height) {
+    this.x = typeof (x) != 'undefined' ? x : 0;
+    this.y = typeof (y) != 'undefined' ? y : 0;
+    this.width = typeof (width) != 'undefined' ? width : 1;
+    this.height = typeof (height) != 'undefined' ? height : 1;
+
+    this.speed = 0;
+    this.direction = null;
+    this.slide = false;
+
+    var active = false;
+
+    var onActive = [];
+    var onDeactive = [];
+    var onCollision = [];
+
+    this.setDirection = function(x2, y2) {
+        this.direction = OGE.Direction.create(this.x, this.y, x2, y2);
+    };
+
+    this.clearEvents = function() {
+        onActivate = [];
+        onDeactive = [];
+    };
+
+    this.isActive = function() {
+        return active;
+    };
+
+    this.setActive = function(newActive) {
+        if (active !== newActive) {
+            active = newActive;
+            if (active) {
+                for (var i = 0; i < onActive.length; i++) {
+                    onActive[i]();
+                }
+            } else {
+                for (var j = 0; j < onDeactive.length; j++) {
+                    onDeactive[j]();
+                }
+            }
+        }
+    };
+
+    this.onActive = function(onActiveEvent) {
+        onActive.push(onActiveEvent);
+    };
+
+    this.onDeactive = function(onDeactiveEvent) {
+        onDeactive.push(onDeactiveEvent);
+    };
+
+    this.onCollision = function(onCollisionEvent) {
+        onCollision.push(onCollisionEvent);
+    };
+
+    this.collide = function(body) {
+        var collide = true;
+        for (var i = 0; i < onCollision.length; i++) {
+            if (onCollision[i](body) === false) {
+                collide = false;
+            }
+        }
+        return collide;
+    };
+
+    this.intersects = function(bodyOrX, y, width, height) {
+        var x, body;
+        x = body = bodyOrX;
+        if (arguments.length === 1) {
+            x = body.x;
+            y = body.y;
+            width = body.width;
+            height = body.height;
+        }
+
+        return this.x < x + width &&
+            this.x + this.width > x &&
+            this.y < y + height && 
+            this.y + this.height > y;
+    };
+
+    this.intersection = function(bodyOrX, y, width, height) {
+        var x, body;
+        x = body = bodyOrX;
+        if (arguments.length === 1) {
+            x = body.x;
+            y = body.y;
+            width = body.width;
+            height = body.height;
+        }
+
+        var sx, ex, sy, ey;
+        sx = this.x > x ? this.x : x;
+        ex = this.x + this.width < x + width ? this.x + this.width : x + width;
+        sy = this.y > y ? this.y : y;
+        ey = this.y + this.height < y + height ? this.y + this.width : y + height; 
+        return (ex - sx) * (ey - sy);
+    };
+
+};
 OGE.World = function(width, height, zoneSize) {
     this.width = typeof (width) != 'undefined' ? width : 640;
     this.height = typeof (height) != 'undefined' ? height : 480;
@@ -233,129 +383,4 @@ OGE.World = function(width, height, zoneSize) {
             moveBody(body, direction.clone().rotate(90), 1);
         }
     };
-};
-OGE.Direction = function(cos, sin) {
-    this.cos = typeof (cos) != 'undefined' ? cos : 0;
-    this.sin = typeof (sin) != 'undefined' ? sin : 0;
-
-    this.rotate = function(degrees) {
-        var radian = degrees * (Math.PI / 180);
-        this.cos = Math.cos(Math.acos(this.cos) + radian);
-        this.sin = Math.sin(Math.asin(this.sin) + radian);
-        return this;
-    };
-
-    this.clone = function() {
-        return new OGE.Direction(this.cos, this.sin);
-    };
-};
-
-OGE.Direction.create = function(x1, y1, x2, y2) {
-    var a =  y2 - y1;
-    var b = x2 - x1;
-    var h = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
-    var sin = a / h;
-    var cos = b / h;
-    return new OGE.Direction(cos, sin);
-};
-OGE.Body = function(x, y, width, height) {
-    this.x = typeof (x) != 'undefined' ? x : 0;
-    this.y = typeof (y) != 'undefined' ? y : 0;
-    this.width = typeof (width) != 'undefined' ? width : 1;
-    this.height = typeof (height) != 'undefined' ? height : 1;
-
-    this.speed = 0;
-    this.direction = null;
-    this.slide = false;
-
-    var active = false;
-
-    var onActive = [];
-    var onDeactive = [];
-    var onCollision = [];
-
-    this.setDirection = function(x2, y2) {
-        this.direction = OGE.Direction.create(this.x, this.y, x2, y2);
-    };
-
-    this.clearEvents = function() {
-        onActivate = [];
-        onDeactive = [];
-    };
-
-    this.isActive = function() {
-        return active;
-    };
-
-    this.setActive = function(newActive) {
-        if (active !== newActive) {
-            active = newActive;
-            if (active) {
-                for (var i = 0; i < onActive.length; i++) {
-                    onActive[i]();
-                }
-            } else {
-                for (var j = 0; j < onDeactive.length; j++) {
-                    onDeactive[j]();
-                }
-            }
-        }
-    };
-
-    this.onActive = function(onActiveEvent) {
-        onActive.push(onActiveEvent);
-    };
-
-    this.onDeactive = function(onDeactiveEvent) {
-        onDeactive.push(onDeactiveEvent);
-    };
-
-    this.onCollision = function(onCollisionEvent) {
-        onCollision.push(onCollisionEvent);
-    };
-
-    this.collide = function(body) {
-        var collide = true;
-        for (var i = 0; i < onCollision.length; i++) {
-            if (onCollision[i](body) === false) {
-                collide = false;
-            }
-        }
-        return collide;
-    };
-
-    this.intersects = function(bodyOrX, y, width, height) {
-        var x, body;
-        x = body = bodyOrX;
-        if (arguments.length === 1) {
-            x = body.x;
-            y = body.y;
-            width = body.width;
-            height = body.height;
-        }
-
-        return this.x < x + width &&
-            this.x + this.width > x &&
-            this.y < y + height && 
-            this.y + this.height > y;
-    };
-
-    this.intersection = function(bodyOrX, y, width, height) {
-        var x, body;
-        x = body = bodyOrX;
-        if (arguments.length === 1) {
-            x = body.x;
-            y = body.y;
-            width = body.width;
-            height = body.height;
-        }
-
-        var sx, ex, sy, ey;
-        sx = this.x > x ? this.x : x;
-        ex = this.x + this.width < x + width ? this.x + this.width : x + width;
-        sy = this.y > y ? this.y : y;
-        ey = this.y + this.height < y + height ? this.y + this.width : y + height; 
-        return (ex - sx) * (ey - sy);
-    };
-
 };
