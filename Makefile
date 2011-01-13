@@ -1,6 +1,7 @@
 SRC_DIR = src
 LIB_DIR = lib
 DIST_DIR = dist
+JASMINE_DIR = ${LIB_DIR}/jasmine
 
 BASE_FILES = ${SRC_DIR}/base.oge.js\
 			 ${SRC_DIR}/direction.oge.js\
