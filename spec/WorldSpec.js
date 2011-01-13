@@ -14,8 +14,7 @@ describe("World", function() {
 
 		w = new OGE.World(100, 100);
 		b1 = new OGE.Body(0, 0, 10, 10);
-		w.addBody(b1);
-		b1.setActive(true);
+		w.addBody(b1, true);
 		b1.speed = 1;
 		b1.direction = new OGE.Direction(1, 0);
 
@@ -63,20 +62,14 @@ describe("World", function() {
 
 	it("should keep track of active bodies", function() {
 		var b = new OGE.Body(1, 2, 3, 4);
-		expect(world2.addBody(b)).toBeTruthy();
-		expect(world2.activeBodies.length).toEqual(0);
-		b.setActive(true);
-		expect(world2.activeBodies).toContain(b);
+		expect(world2.addBody(b, true)).toBeTruthy();
 		expect(world2.activeBodies.length).toEqual(1);
+		expect(world2.activeBodies).toContain(b);
 		var b2 = new OGE.Body(1, 2, 3, 4);
-		b2.setActive(true);
 		expect(world2.activeBodies).not.toContain(b2);
-		expect(world2.addBody(b2)).toBeTruthy();
+		expect(world2.addBody(b2, true)).toBeTruthy();
 		expect(world2.activeBodies).toContain(b2);
 		expect(world2.activeBodies.length).toEqual(2);
-		b2.setActive(false);
-		expect(world2.activeBodies).not.toContain(b2);
-		expect(world2.activeBodies.length).toEqual(1);
 	});
 
 	it("should keep track of bodies within zones", function() {
@@ -209,8 +202,7 @@ describe("World", function() {
 	it("should concider changing zones as it checks for collisions", function() {
 		var w = new OGE.World(100, 100);
 		var b = new OGE.Body(0, 0, 10, 10);
-		w.addBody(b);
-		b.setActive(true);
+		w.addBody(b, true);
 		b.speed = 50;
 		b.direction = new OGE.Direction(1, 0);
 		var count = 0;
@@ -230,8 +222,7 @@ describe("World", function() {
 	it("should make bodies slide if they have the slide property set to true", function() {
 		var w = new OGE.World(1000, 1000);
 		var b = new OGE.Body(0, 0, 13, 12);
-		w.addBody(b);
-		b.setActive(true);
+		w.addBody(b, true);
 		b.speed = 3;
 		b.slide = true;
 		b.direction = new OGE.Direction(1, 0);
@@ -278,8 +269,7 @@ describe("World", function() {
 	it("should be possible to slide between bodies", function() {
 		var w = new OGE.World(1000, 1000);
 		var b = new OGE.Body(5, 8, 11, 11);
-		w.addBody(b);
-		b.setActive(true);
+		w.addBody(b, true);
 		b.speed = 3;
 		b.slide = true;
 		b.direction = new OGE.Direction(1, 0);
@@ -297,8 +287,7 @@ describe("World", function() {
 	it("should slide regardless of direction", function() {
 		var w = new OGE.World(100, 100);
 		var b = new OGE.Body(0, 0, 10, 10);
-		w.addBody(b);
-		b.setActive(true);
+		w.addBody(b, true);
 		b.speed = 3;
 		b.slide = true;
 
@@ -398,8 +387,7 @@ describe("World", function() {
 	it("should not move a body when hitting blocking bodies", function() {
 		var w = new OGE.World(100, 100);
 		var b = new OGE.Body(0, 10, 10, 10);
-		w.addBody(b);
-		b.setActive(true);
+		w.addBody(b, true);
 		b.speed = 3;
 		b.slide = true;
 		b.direction = new OGE.Direction(1, 0);
@@ -423,8 +411,7 @@ describe("World", function() {
 	it("should not slide when hitting body straight on", function() {
 		var w = new OGE.World(100, 100);
 		var b = new OGE.Body(0, 16, 16, 16);
-		w.addBody(b);
-		b.setActive(true);
+		w.addBody(b, true);
 		b.speed = 1;
 		b.slide = true;
 		b.direction = new OGE.Direction(1, 0);

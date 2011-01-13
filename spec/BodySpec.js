@@ -46,50 +46,6 @@ describe("Body", function() {
 		expect(body1.speed).toEqual(42);
 	});
 
-	it("should direction set to null, but can be set", function() {
-		expect(body1.direction).toEqual(null);
-		expect(body4.direction).toEqual(null);
-		body4.setDirection(0, 1);
-		expect(body4.direction.cos).toEqual(0);
-		body4.setDirection(0, 1);
-		expect(body4.direction.sin).toEqual(1);
-		body4.setDirection(1, 0);
-		expect(body4.direction.cos).toEqual(1);
-		expect(body4.direction.sin).toEqual(0);
-	});
-
-	it("should call events on activating", function() {
-		var count = 0;
-		body1.onActive(function() {
-			expect(body1.isActive()).toBeTruthy();
-			count++;
-		});
-
-		body1.onActive(function() {
-			expect(body1.isActive()).toBeTruthy();
-			count++;
-		});
-
-		body1.onDeactive(function() {
-			expect(body1.isActive()).toBeFalsy();
-			count++;
-		});
-
-		body1.onDeactive(function() {
-			expect(body1.isActive()).toBeFalsy();
-			count++;
-		});
-
-		// Setting the same state will not trigger the events
-		body1.setActive(false);
-		body1.setActive(true);
-		body1.setActive(true);
-		body1.setActive(false);
-		body1.setActive(false);
-
-		expect(count).toEqual(4);
-	});
-
 	it("should call events on collision", function() {
 		var count = 0;
 		body1.onCollision(function() {
