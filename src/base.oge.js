@@ -26,13 +26,3 @@
  */
 
 var OGE = {};
-
-// Prevent protoype inheritance from calling constructors twice when using apply
-// Thanks to eboyjr (##javascript @ freenode)
-Object.construct_prototype = function(o) {
-    var f = function() {
-    };
-
-    f.prototype = o.prototype;
-    return new f();
-};

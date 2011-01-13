@@ -128,7 +128,7 @@ it("should be possible to inherit body", function() {
         this.name = name;
         }
 
-        Person.prototype = Object.construct_prototype(OGE.Body);
+        Person.prototype = OGE.Body.prototype;
 
         Person.prototype.size = function() {
         return this.width * this.height;
