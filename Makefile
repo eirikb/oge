@@ -25,8 +25,8 @@ update:
 	$(call clone_or_pull, ${JASMINE_DIR}, https://github.com/pivotal/jasmine.git)
 
 build:
-	cat ${BASE_FILES} > ${BUNDLE_VERSION}}
-	java -jar ${CLOSURE_COMPILER} --js ${BUNDLE_VERSION}} --js_output_file ${MIN_VERSION}
+	cat ${BASE_FILES} > ${BUNDLE_VERSION}
+	java -jar ${CLOSURE_COMPILER} --js ${BUNDLE_VERSION} --js_output_file ${MIN_VERSION}
 
 define clone_or_pull
 -@@if test ! -d $(strip ${1})/.git; then \
