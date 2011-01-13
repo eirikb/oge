@@ -438,7 +438,7 @@ OGE.World = function(width, height, zoneSize) {
 						body.x = lastX;
 						body.y = lastY;
 						addBodyToZones(body);
-						if (body.slide && steps - j > 0) {
+						if (body.slide && j >= 0) {
 							slideBody(body, direction);
 						} else {
 							return;
@@ -453,8 +453,14 @@ OGE.World = function(width, height, zoneSize) {
 	var slideBody = function(body, direction) {
 		var getIntersection = function(direction) {
 			var intersection = 0;
-			var x = body.x + direction.cos * 1.9;
-			var y = body.y + direction.sin * 1.9;
+			var x = body.x + direction.cos * 1.9 << 0;
+            if (x !== body.x) {
+                x = body.x + (x > body.x ? 1 : -1);
+            }
+			var y = body.y + direction.sin * 1.9 << 0;
+            if (y !== body.y) {
+                y = body.y + (y > body.y ? 1 : -1);
+            }
 			var bodies = self.getBodies(x, y, body.width, body.height);
 			for (var i = 0; i < bodies.length; i++) {
 				var body2 = bodies[i];
