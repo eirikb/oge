@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  *
  * @author Eirik Brandtzæg <eirikb@eirikb.no>
- * @Version 0.1
+ * @Version 0.3
  */
 
 var OGE = {};
@@ -36,10 +36,26 @@ Object.construct_prototype = function(o) {
     f.prototype = o.prototype;
     return new f();
 };
+/**
+ * Direction object
+ *
+ * @constructur
+ * @param {number} cos Cosine
+ * @param {number} sin Sines
+ * @return {OGE.Direction}
+ */
 OGE.Direction = function(cos, sin) {
     this.cos = typeof (cos) != 'undefined' ? cos : 0;
     this.sin = typeof (sin) != 'undefined' ? sin : 0;
 
+    /**
+     * Rotate the direction based on degrees (not radians)
+     * Will update cos and sin accordingly
+     * To rotate 'the other way', use negative numbers
+     *
+     * @param {number} degrees Amount of degrees to roate cos and sin
+     * @return this
+     */
     this.rotate = function(degrees) {
         var radian = degrees * (Math.PI / 180);
         this.cos = Math.cos(Math.acos(this.cos) + radian);
@@ -47,11 +63,27 @@ OGE.Direction = function(cos, sin) {
         return this;
     };
 
+    /**
+     * Clone this direction
+     * 
+     * @return new OGE.Direction with same cos and sin
+     */
     this.clone = function() {
         return new OGE.Direction(this.cos, this.sin);
     };
 };
 
+/**
+ * Static funtion for creating a OGE.Direction based on
+ * starting and ending cooridnates
+ * Calculates cos and sin based on the four arguments
+ *
+ * @param {number} x1 X-coordinate to start from
+ * @param {number} y1 Y-coordinate to start from
+ * @param {number} x2 X-coordinate to end on
+ * @param {number} y2 Y-coordinate to end on
+ * @return {OGE.Direction} A new direction
+ */
 OGE.Direction.create = function(x1, y1, x2, y2) {
     var a =  y2 - y1;
     var b = x2 - x1;
@@ -60,13 +92,28 @@ OGE.Direction.create = function(x1, y1, x2, y2) {
     var cos = b / h;
     return new OGE.Direction(cos, sin);
 };
+/**
+ * Zone object
+ * Note that x and y in zone is within the grid of zones,
+ * unlike in bodies where it is the actual coordinates
+ * Zones store links to bodies within them
+ *
+ * @constructur
+ * @param {number} x X-gridcoordinate in world
+ * @param {number} y Y-gridcoordinate in world
+ * @return {OGE.Zone}
+ */
 OGE.Zone = function(x, y) {
-
     this.x = typeof (x) != 'undefined' ? x : 0;
     this.y = typeof (y) != 'undefined' ? y : 0;
 
-    this.bodies = new Array();
+    this.bodies = [];
 
+    /**
+     * Add a body to the zone
+     *
+     * @param {OGE.Body} body Body to add
+     */
     this.addBody = function(body) {
         for (var i = 0; i < this.bodies.length; i++) {
             if (this.bodies[i] === body) {
@@ -76,6 +123,11 @@ OGE.Zone = function(x, y) {
         this.bodies.push(body);
     };
 
+    /**
+     * Remove body from the zone
+     *
+     * @param {OGE.Body} body Body to remove
+     */
     this.removeBody = function(body) {
         for (var i = 0; i < this.bodies.length; i++) {
             if (this.bodies[i] === body) {
@@ -84,7 +136,17 @@ OGE.Zone = function(x, y) {
             }
         }
     };
-}
+};
+/**
+ * Body object
+ *
+ * @constructur
+ * @param {number} x X-coordinate on world
+ * @param {number} y Y-coordinate on world
+ * @param {number} width Width of body
+ * @param {number} height Height of body
+ * @return {OGE.Body}
+ */
 OGE.Body = function(x, y, width, height) {
     this.x = typeof (x) != 'undefined' ? x : 0;
     this.y = typeof (y) != 'undefined' ? y : 0;
@@ -101,19 +163,41 @@ OGE.Body = function(x, y, width, height) {
     var onDeactive = [];
     var onCollision = [];
 
-    this.setDirection = function(x2, y2) {
-        this.direction = OGE.Direction.create(this.x, this.y, x2, y2);
+    /**
+     * Create (calculate) and set a direction to body based on coordinates (x, y)
+     *
+     * @param {number} x X-coordinate according to body.x
+     * @param {number} y Y-coordinate according to body.x
+     */
+    this.setDirection = function(x, y) {
+        this.direction = OGE.Direction.create(this.x, this.y, x, y);
     };
 
+    /**
+     * Remove onActive and onDeactive events
+     * NOTE: Does not remove onCollision
+     */
     this.clearEvents = function() {
         onActivate = [];
         onDeactive = [];
     };
 
+    /**
+     * Check if body is active
+     *
+     * @return true if active, false if not
+     */
     this.isActive = function() {
         return active;
     };
 
+    /**
+     * Set body as active or not.
+     * Will trigger all onActivate/onDeactivate-events
+     * (Used by OGE.World to monitor this state)
+     *
+     * @param {boolean} newActive Set body active (true) or deactive (false)
+     */
     this.setActive = function(newActive) {
         if (active !== newActive) {
             active = newActive;
@@ -129,10 +213,22 @@ OGE.Body = function(x, y, width, height) {
         }
     };
 
+    /**
+     * Add event for onActive
+     * Will trigger from setActive
+     *
+     * @param {Function} onActiveEvent event
+     */
     this.onActive = function(onActiveEvent) {
         onActive.push(onActiveEvent);
     };
 
+    /**
+     * Add event for onDeactive
+     * Will trigger from setActive
+     *
+     * @param {Function} onDeactiveEvent event
+     */
     this.onDeactive = function(onDeactiveEvent) {
         onDeactive.push(onDeactiveEvent);
     };
@@ -141,6 +237,13 @@ OGE.Body = function(x, y, width, height) {
         onCollision.push(onCollisionEvent);
     };
 
+    /**
+     * Collide two bodies (this and given body)
+     * Will trigger all onCollision events
+     * 
+     * @param {OGE.Body} body Body this body has collided with
+     * @return false if one of onCollision events return false, true if not
+     */
     this.collide = function(body) {
         var collide = true;
         for (var i = 0; i < onCollision.length; i++) {
@@ -151,6 +254,16 @@ OGE.Body = function(x, y, width, height) {
         return collide;
     };
 
+    /**
+     * Check if this body intersects with a given body/location
+     *
+     * @param {OGE.Body} bodyOrX Body to chech intersection with,
+     *                   this can also be {number} x
+     * @param {number} y Y (optional)
+     * @param {number} width Width (optional)
+     * @param {number} height Height (optional)
+     * @return true if the bodies intersect, false if not
+     */
     this.intersects = function(bodyOrX, y, width, height) {
         var x, body;
         x = body = bodyOrX;
@@ -167,6 +280,18 @@ OGE.Body = function(x, y, width, height) {
             this.y + this.height > y;
     };
 
+    /**
+     * Check how much this body intersects with nother body
+     * Will not check if they actually intersect,
+     * so can return negative number @see #intersects 
+     *
+     * @param {OGE.Body} bodyOrX Body to chech intersection with,
+     *                   this can also be {number} x
+     * @param {number} y Y (optional)
+     * @param {number} width Width (optional)
+     * @param {number} height Height (optional)
+     * @return How much the two bodies intersect, can be negative
+     */
     this.intersection = function(bodyOrX, y, width, height) {
         var x, body;
         x = body = bodyOrX;
@@ -186,6 +311,15 @@ OGE.Body = function(x, y, width, height) {
     };
 
 };
+/**
+ * World object, contain everything
+ *
+ * @constructur
+ * @param {number} width Width of map
+ * @param {number} height Height of map
+ * @param {number} zoneSize How large each zone should be (default 10)
+ * @return {OGE.World}
+ */
 OGE.World = function(width, height, zoneSize) {
     this.width = typeof (width) != 'undefined' ? width : 640;
     this.height = typeof (height) != 'undefined' ? height : 480;
@@ -205,6 +339,14 @@ OGE.World = function(width, height, zoneSize) {
         }
     }
 
+    /**
+     * Add a body to the world, will be added to zones
+     * and onActive/onDeeactivate is monitored
+     * Bodies can be added over other bodies (x, y)
+     *
+     * @param {OGE.Body} body Body to add
+     * @return true if body was added, false if not (out of bounds)
+     */
     this.addBody = function(body) {
         if (addBodyToZones(body) !== true) {
             return false;
@@ -217,21 +359,27 @@ OGE.World = function(width, height, zoneSize) {
         body.clearEvents();
 
         body.onActive( function() {
-            self.activeBodies.push(body);
-        });
+                self.activeBodies.push(body);
+                });
 
         body.onDeactive( function() {
-            for (var i = 0; i < self.activeBodies.length; i++) {
+                for (var i = 0; i < self.activeBodies.length; i++) {
                 if (self.activeBodies[i] === body) {
-                    self.activeBodies.splice(i, 1);
-                    break;
+                self.activeBodies.splice(i, 1);
+                break;
                 }
-            }
-        });
+                }
+                });
 
         return true;
     };
 
+    /**
+     * Removes a body from the world (and zones it is)
+     * Important: Removes all listeners to onActivate/onDeactivate
+     *
+     * @param {OGE.Body} body Body to remove
+     */
     this.removeBody = function(body) {
         removeBodyFromZones(body);
         for (var i = 0; i < self.activeBodies.length; i++) {
@@ -243,6 +391,17 @@ OGE.World = function(width, height, zoneSize) {
 
     };
 
+    /**
+     * Get all bodies from a given location (either OGE.Body or x,y)
+     * Given location can be outside the bounds of the World
+     *
+     * @param {OGE.Body} bodyOrX Uses this to find other bodies (x, y, width, height)
+     *                           This can also be the {number} x
+     * @param {number} y Y (optional)
+     * @param {number} width Width (optional)
+     * @param {number} height Height (optional)
+     * @return Array of OGE.Body found, including the given body
+     */
     this.getBodies = function(bodyOrX, y, width, height) {
         var body, x;
         body = x = bodyOrX;
@@ -279,6 +438,17 @@ OGE.World = function(width, height, zoneSize) {
         return bodies;
     };
 
+    /**
+     * Get all zones from a given location (either OGE.Body or x,y)
+     * Given location can not be outside the bounds of the World
+     *
+     * @param {OGE.Body} bodyOrX Uses this to find other bodies (x, y, width, height)
+     *                           This can also be the {number} x
+     * @param {number} y Y (optional)
+     * @param {number} width Width (optional)
+     * @param {number} height Height (optional)
+     * @return Array of OGE.Zone found, including the given body
+     */
     this.getZones = function(bodyOrX, y, width, height) {
         var body, x;
         body = x = bodyOrX;
@@ -309,6 +479,12 @@ OGE.World = function(width, height, zoneSize) {
         }
     };
 
+    /**
+     * Does one 'step' in the world, as in time passes
+     * Will move all active bodies
+     *
+     * @param {number} steps Amount of steps to do
+     */ 
     this.step = function(steps) {
         steps = arguments.length === 0 ? 1 : steps;
         for (var step = 0; step < steps; step++) {
@@ -320,6 +496,8 @@ OGE.World = function(width, height, zoneSize) {
             }
         }
     };
+
+    // Private functions
 
     var addBodyToZones = function(body) {
         var zones = self.getZones(body);

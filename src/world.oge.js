@@ -1,3 +1,12 @@
+/**
+ * World object, contain everything
+ *
+ * @constructur
+ * @param {number} width Width of map
+ * @param {number} height Height of map
+ * @param {number} zoneSize How large each zone should be (default 10)
+ * @return {OGE.World}
+ */
 OGE.World = function(width, height, zoneSize) {
     this.width = typeof (width) != 'undefined' ? width : 640;
     this.height = typeof (height) != 'undefined' ? height : 480;
@@ -17,6 +26,14 @@ OGE.World = function(width, height, zoneSize) {
         }
     }
 
+    /**
+     * Add a body to the world, will be added to zones
+     * and onActive/onDeeactivate is monitored
+     * Bodies can be added over other bodies (x, y)
+     *
+     * @param {OGE.Body} body Body to add
+     * @return true if body was added, false if not (out of bounds)
+     */
     this.addBody = function(body) {
         if (addBodyToZones(body) !== true) {
             return false;
@@ -29,21 +46,27 @@ OGE.World = function(width, height, zoneSize) {
         body.clearEvents();
 
         body.onActive( function() {
-            self.activeBodies.push(body);
-        });
+                self.activeBodies.push(body);
+                });
 
         body.onDeactive( function() {
-            for (var i = 0; i < self.activeBodies.length; i++) {
+                for (var i = 0; i < self.activeBodies.length; i++) {
                 if (self.activeBodies[i] === body) {
-                    self.activeBodies.splice(i, 1);
-                    break;
+                self.activeBodies.splice(i, 1);
+                break;
                 }
-            }
-        });
+                }
+                });
 
         return true;
     };
 
+    /**
+     * Removes a body from the world (and zones it is)
+     * Important: Removes all listeners to onActivate/onDeactivate
+     *
+     * @param {OGE.Body} body Body to remove
+     */
     this.removeBody = function(body) {
         removeBodyFromZones(body);
         for (var i = 0; i < self.activeBodies.length; i++) {
@@ -55,6 +78,17 @@ OGE.World = function(width, height, zoneSize) {
 
     };
 
+    /**
+     * Get all bodies from a given location (either OGE.Body or x,y)
+     * Given location can be outside the bounds of the World
+     *
+     * @param {OGE.Body} bodyOrX Uses this to find other bodies (x, y, width, height)
+     *                           This can also be the {number} x
+     * @param {number} y Y (optional)
+     * @param {number} width Width (optional)
+     * @param {number} height Height (optional)
+     * @return Array of OGE.Body found, including the given body
+     */
     this.getBodies = function(bodyOrX, y, width, height) {
         var body, x;
         body = x = bodyOrX;
@@ -91,6 +125,17 @@ OGE.World = function(width, height, zoneSize) {
         return bodies;
     };
 
+    /**
+     * Get all zones from a given location (either OGE.Body or x,y)
+     * Given location can not be outside the bounds of the World
+     *
+     * @param {OGE.Body} bodyOrX Uses this to find other bodies (x, y, width, height)
+     *                           This can also be the {number} x
+     * @param {number} y Y (optional)
+     * @param {number} width Width (optional)
+     * @param {number} height Height (optional)
+     * @return Array of OGE.Zone found, including the given body
+     */
     this.getZones = function(bodyOrX, y, width, height) {
         var body, x;
         body = x = bodyOrX;
@@ -121,6 +166,12 @@ OGE.World = function(width, height, zoneSize) {
         }
     };
 
+    /**
+     * Does one 'step' in the world, as in time passes
+     * Will move all active bodies
+     *
+     * @param {number} steps Amount of steps to do
+     */ 
     this.step = function(steps) {
         steps = arguments.length === 0 ? 1 : steps;
         for (var step = 0; step < steps; step++) {
@@ -132,6 +183,8 @@ OGE.World = function(width, height, zoneSize) {
             }
         }
     };
+
+    // Private functions
 
     var addBodyToZones = function(body) {
         var zones = self.getZones(body);
