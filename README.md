@@ -17,6 +17,7 @@ The only features are collision detection and sliding bodies when colliding.
    * <b>oge.min.js</b>: Compiled version (Google Closure Compiler)
  * <b>Makefile</b>: Testing and pulling dependent test framework
  * <b>SpecRunner.html</b>: For testing in browser
+ * <b>SpecRunnerDist.html</b>: For testing dist file (dist/oge.min.js) in browser
 
 ### Testing
 

@@ -199,7 +199,7 @@ OGE.World = function(width, height, zoneSize) {
                     intersection += body2.intersection(x, y, body.width, body.height);
                 }
             } 
-            return intersection;
+            return intersection << 0;
         };
 
         var intersection1 = getIntersection(direction.clone().rotate(-45));
