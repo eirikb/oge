@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  *
  * @author Eirik Brandtzæg <eirikb@eirikb.no>
- * @Version 0.1
+ * @Version 0.2
  */
 
 var OGE = {};
