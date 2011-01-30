@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  *
  * @author Eirik Brandtzæg <eirikb@eirikb.no>
- * @Version 0.5
+ * @Version 0.6
  */
 
 var OGE = {};
@@ -415,7 +415,6 @@ OGE.World.prototype.step = function(steps) {
 };
 
 // Originally private methods
-
 OGE.World.prototype.addBodyToZones = function(body) {
 	var zones = this.getZones(body);
 	if (zones.length === 0) {
@@ -473,20 +472,44 @@ OGE.World.prototype.moveBody = function(body, direction, steps) {
 OGE.World.prototype.slideBody = function(body, direction) {
 	var self = this;
 	var getIntersection = function(direction) {
-		var intersection = 0;
-		var x = body.x + direction.cos * 1.9 << 0;
+		var ignoreBodies = [],
+		bodies = self.getBodies(body),
+		intersection,
+		i,
+		j,
+		x,
+		y,
+		body2,
+		ignore;
+		for (i = 0; i < bodies.length; i++) {
+			body2 = bodies[i];
+			if (body2 !== body && body2.intersects(body)) {
+				ignoreBodies.push(body2);
+			}
+		}
+		intersection = 0;
+		x = body.x + direction.cos * 1.9 << 0;
 		if (x !== body.x) {
 			x = body.x + (x > body.x ? 1: - 1);
 		}
-		var y = body.y + direction.sin * 1.9 << 0;
+		y = body.y + direction.sin * 1.9 << 0;
 		if (y !== body.y) {
 			y = body.y + (y > body.y ? 1: - 1);
 		}
-		var bodies = self.getBodies(x, y, body.width, body.height);
-		for (var i = 0; i < bodies.length; i++) {
-			var body2 = bodies[i];
+		bodies = self.getBodies(x, y, body.width, body.height);
+		for (i = 0; i < bodies.length; i++) {
+			body2 = bodies[i];
 			if (body2 !== body && body2.intersects(x, y, body.width, body.height)) {
-				intersection += body2.intersection(x, y, body.width, body.height);
+				ignore = false;
+				for (j = 0; j < ignoreBodies.length; j++) {
+					if (body2 === ignoreBodies[j]) {
+						ignore = true;
+						break;
+					}
+				}
+				if (!ignore) {
+					intersection += body2.intersection(x, y, body.width, body.height);
+				}
 			}
 		}
 		return intersection << 0;

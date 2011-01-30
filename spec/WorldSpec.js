@@ -1,3 +1,8 @@
+var posCheck = function(body, expectedX, expectedY) {
+	expect(body.x << 0).toBe(expectedX);
+	expect(body.y << 0).toBe(expectedY);
+};
+
 describe("World", function() {
 	var world1;
 	var world2;
@@ -424,10 +429,23 @@ describe("World", function() {
 		expect(b.y).toBe(16);
 	});
 
-	var posCheck = function(body, expectedX, expectedY) {
-		expect(body.x << 0).toBe(expectedX);
-		expect(body.y << 0).toBe(expectedY);
-	}
+});
 
+describe("More tests in a different spec", function() {
+	it("should be possibe to slide regardelss of intersecting bodies", function() {
+		var w = new OGE.World(100, 100);
+		var bo1 = new OGE.Body(0, 0, 10, 10);
+		var bo2 = new OGE.Body(10, 10, 10, 10);
+		var p = new OGE.Body(6, 10, 10, 10);
+		p.slide = true;
+		p.speed = 1;
+		p.direction = new OGE.Direction(0, - 1);
+		w.addBody(bo1);
+		w.addBody(bo2);
+		w.addBody(p, true);
+		posCheck(p, 6, 10);
+		w.step();
+		posCheck(p, 7, 10);
+	});
 });
 
