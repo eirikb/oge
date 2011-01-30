@@ -446,26 +446,31 @@ OGE.World.prototype.moveBody = function(body, direction, steps) {
 		this.removeBodyFromZones(body);
 		body.x += direction.cos;
 		body.y += direction.sin;
-
-		bodies = this.getBodies(body);
-		for (var j = 0; j < bodies.length; j++) {
-			var body2 = bodies[j];
-			if (body !== body2 && ! body2.intersects(lastX, lastY, body.width, body.height) && body2.intersects(body)) {
-				var collide1 = body.collide(body2) === true;
-				var collide2 = body2.collide(body) === true;
-				if (collide1 && collide2) {
-					body.x = lastX;
-					body.y = lastY;
-					this.addBodyToZones(body);
-					if (body.slide && j >= 0) {
-						this.slideBody(body, direction);
-					} else {
-						return;
+		if (body.x >= 0 && body.y >= 0 && body.x + body.width < this.width && body.y + body.height < this.height) {
+			bodies = this.getBodies(body);
+			for (var j = 0; j < bodies.length; j++) {
+				var body2 = bodies[j];
+				if (body !== body2 && ! body2.intersects(lastX, lastY, body.width, body.height) && body2.intersects(body)) {
+					var collide1 = body.collide(body2) === true;
+					var collide2 = body2.collide(body) === true;
+					if (collide1 && collide2) {
+						body.x = lastX;
+						body.y = lastY;
+						this.addBodyToZones(body);
+						if (body.slide && j >= 0) {
+							this.slideBody(body, direction);
+						} else {
+							return;
+						}
 					}
 				}
 			}
+			this.addBodyToZones(body);
+		} else {
+			body.x = lastX;
+			body.y = lastY;
+			break;
 		}
-		this.addBodyToZones(body);
 	}
 };
 
