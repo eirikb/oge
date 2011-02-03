@@ -25,7 +25,9 @@
  * @Version 0.6
  */
 
-var OGE = {};
+var OGE = {
+	version: 0.6
+};
 
 /**
  * Direction object
