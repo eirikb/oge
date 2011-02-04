@@ -448,7 +448,7 @@ OGE.World.prototype.moveBody = function(body, direction, steps) {
 		this.removeBodyFromZones(body);
 		body.x += direction.cos;
 		body.y += direction.sin;
-		if (body.x >= 0 && body.y >= 0 && body.x + body.width < this.width && body.y + body.height < this.height) {
+		if (body.x >= 0 && body.y >= 0 && body.x + body.width <= this.width && body.y + body.height <= this.height) {
 			bodies = this.getBodies(body);
 			for (var j = 0; j < bodies.length; j++) {
 				var body2 = bodies[j];
