@@ -22,10 +22,15 @@
  * THE SOFTWARE.
  *
  * @author Eirik Brandtzæg <eirikb@eirikb.no>
- * @Version 0.6
+ * @Version 0.7
  */
 
 var OGE = {
-	version: 0.6
+	version: 0.7
 };
+
+// Export OGE for CommonJS
+if (typeof module !== 'undefined' && module.exports) {
+	module.exports = OGE;
+}
 
