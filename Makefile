@@ -12,10 +12,7 @@ CLOSURE_COMPILER = ${LIB_DIR}/compiler.jar
 BUNDLE_VERSION = ${DIST_DIR}/oge.js
 MIN_VERSION = ${DIST_DIR}/oge.min.js
 
-all: update lint build
-
-update:
-	git submodule update --init
+all: lint build
 
 lint:
 	java -jar ${JSLINT4JAVA} ${BASE_FILES}
