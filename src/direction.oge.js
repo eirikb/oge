@@ -33,14 +33,11 @@ OGE.Direction.prototype.rotate = function(degrees) {
  * @return new OGE.Direction with same cos and sin
  */
 OGE.Direction.prototype.clone = function() {
-	return new OGE.Direction(this.cos, this.sin);
+	return OGE.Direction.deserialize(this.serialize());
 };
 
 OGE.Direction.prototype.serialize = function() {
-	return {
-		cos: this.cos,
-		sin: this.sin
-	};
+	return OGE.merge({}, this);
 };
 
 OGE.Direction.deserialize = function(data) {

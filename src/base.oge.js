@@ -30,12 +30,12 @@ var OGE = {
 };
 
 OGE.merge = function(obj, data) {
-	for (var prop in obj) {
-		if (Object.prototype.hasOwnProperty.call(obj, prop)) {
-            obj[prop] = data[prop];
+	for (var prop in data) {
+		if (Object.prototype.hasOwnProperty.call(data, prop)) {
+			obj[prop] = data[prop];
 		}
 	}
-    return obj;
+	return obj;
 };
 
 // Export OGE for CommonJS
