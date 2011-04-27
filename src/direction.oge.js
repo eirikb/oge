@@ -36,3 +36,14 @@ OGE.Direction.prototype.clone = function() {
 	return new OGE.Direction(this.cos, this.sin);
 };
 
+OGE.Direction.prototype.serialize = function() {
+	return {
+		cos: this.cos,
+		sin: this.sin
+	};
+};
+
+OGE.Direction.deserialize = function(data) {
+	return new OGE.Direction(data.cos, data.sin);
+};
+
