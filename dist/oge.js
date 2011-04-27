@@ -22,20 +22,20 @@
  * THE SOFTWARE.
  *
  * @author Eirik Brandtzæg <eirikb@eirikb.no>
- * @Version 0.7
+ * @Version 0.8
  */
 
 var OGE = {
-	version: 0.7
+	version: 0.8
 };
 
 OGE.merge = function(obj, data) {
-	for (var prop in obj) {
-		if (Object.prototype.hasOwnProperty.call(obj, prop)) {
-            obj[prop] = data[prop];
+	for (var prop in data) {
+		if (data.hasOwnProperty(prop)) {
+			obj[prop] = data[prop];
 		}
 	}
-    return obj;
+	return obj;
 };
 
 // Export OGE for CommonJS
@@ -78,14 +78,11 @@ OGE.Direction.prototype.rotate = function(degrees) {
  * @return new OGE.Direction with same cos and sin
  */
 OGE.Direction.prototype.clone = function() {
-	return new OGE.Direction(this.cos, this.sin);
+	return OGE.Direction.deserialize(this.serialize());
 };
 
 OGE.Direction.prototype.serialize = function() {
-	return {
-		cos: this.cos,
-		sin: this.sin
-	};
+	return OGE.merge({}, this);
 };
 
 OGE.Direction.deserialize = function(data) {
