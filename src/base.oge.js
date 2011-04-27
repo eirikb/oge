@@ -22,16 +22,16 @@
  * THE SOFTWARE.
  *
  * @author Eirik Brandtzæg <eirikb@eirikb.no>
- * @Version 0.7
+ * @Version 0.8
  */
 
 var OGE = {
-	version: 0.7
+	version: 0.8
 };
 
 OGE.merge = function(obj, data) {
 	for (var prop in data) {
-		if (Object.prototype.hasOwnProperty.call(data, prop)) {
+		if (data.hasOwnProperty(prop)) {
 			obj[prop] = data[prop];
 		}
 	}
