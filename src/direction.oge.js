@@ -44,6 +44,7 @@ OGE.Direction.prototype.serialize = function() {
 };
 
 OGE.Direction.deserialize = function(data) {
-	return new OGE.Direction(data.cos, data.sin);
+	var direction = new OGE.Direction(data.cos, data.sin);
+	return OGE.merge(direction, data);
 };
 

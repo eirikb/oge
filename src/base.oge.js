@@ -29,6 +29,15 @@ var OGE = {
 	version: 0.7
 };
 
+OGE.merge = function(obj, data) {
+	for (var prop in obj) {
+		if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+            obj[prop] = data[prop];
+		}
+	}
+    return obj;
+};
+
 // Export OGE for CommonJS
 if (typeof module !== 'undefined' && module.exports) {
 	module.exports = OGE;

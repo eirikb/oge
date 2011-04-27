@@ -29,6 +29,15 @@ var OGE = {
 	version: 0.7
 };
 
+OGE.merge = function(obj, data) {
+	for (var prop in obj) {
+		if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+            obj[prop] = data[prop];
+		}
+	}
+    return obj;
+};
+
 // Export OGE for CommonJS
 if (typeof module !== 'undefined' && module.exports) {
 	module.exports = OGE;
@@ -80,7 +89,8 @@ OGE.Direction.prototype.serialize = function() {
 };
 
 OGE.Direction.deserialize = function(data) {
-	return new OGE.Direction(data.cos, data.sin);
+	var direction = new OGE.Direction(data.cos, data.sin);
+	return OGE.merge(direction, data);
 };
 
 /**
