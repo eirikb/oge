@@ -205,10 +205,13 @@ OGE.World.prototype.moveBody = function(body, direction, steps) {
         this.removeBodyFromZones(body);
         body.x += direction.cos;
         body.y += direction.sin;
-        body.x = body.x < 0 ? 0: body.x;
-        body.x = body.x + body.width > this.width ? this.width - body.width: body.x;
-        body.y = body.y < 0 ? 0: body.y;
-        body.y = body.y + body.height > this.height ? this.height - body.height: body.y;
+        if (body.x < 0 || body.x + body.width > this.width || body.y < 0 || body.y + body.height > this.height) {
+            body.x = body.x < 0 ? 0: body.x;
+            body.x = body.x + body.width > this.width ? this.width - body.width: body.x;
+            body.y = body.y < 0 ? 0: body.y;
+            body.y = body.y + body.height > this.height ? this.height - body.height: body.y;
+            body.collide(this);
+        }
         bodies = this.getBodies(body);
         for (var j = 0; j < bodies.length; j++) {
             var body2 = bodies[j];
