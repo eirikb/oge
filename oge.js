@@ -46,23 +46,50 @@ oge.World = function(width, height, zoneSize) {
         }
     }
 
+    function getZones(x, y, width, height) {
+        var body,
+            x1, x2, y1, y2, zones = [];
+        if (typeof x === 'object') {
+            body = x;
+            x = body.x;
+            y = body.y;
+            width = body.width;
+            height = body.height;
+        }
+
+        if (x >= 0 && x + width - 1 < this.width && y >= 0 && y + height - 1 < this.height) {
+            x1 = Math.floor(x / this.zoneSize);
+            x2 = Math.floor((x + width) / this.zoneSize);
+            y1 = Math.floor(y / this.zoneSize);
+            y2 = Math.floor((y + height) / this.zoneSize);
+
+            for (x = x1; x <= x2; x++) {
+                for (y = y1; y <= y2; y++) {
+                    zones.push(this.zones[x][y]);
+                }
+            }
+        }
+        return zones;
+    }
+
     function addBodyToZones(body) {
         var zones = this.getZones(body),
         i;
-        if (zones.length === 0) {
-            return false;
-        }
         for (i = 0; i < zones.length; i++) {
-            zones[i].addBody(body);
+            zones[i].bodies.push(body);
         }
-        return true;
     }
 
     function removeBodyFromZones(body) {
         var zones = this.getZones(body),
-        i;
+        i, j;
         for (i = 0; i < zones.length; i++) {
-            zones[i].removeBody(body);
+            for (j = 0; j < zones[i].bodies.length; i++) {
+                if (zones[i].bodies[j] === body) {
+                    zones[i].bodies.splice(j, 1);
+                    break;
+                }
+            }
         }
     }
 
@@ -76,7 +103,7 @@ oge.World = function(width, height, zoneSize) {
         for (i = 0; i < steps; i++) {
             lastX = body.x;
             lastY = body.y;
-            this.removeBodyFromZones(body);
+            removeBodyFromZones(body);
             body.x += direction.cos;
             body.y += direction.sin;
             if (body.x < 0 || body.x + body.width > this.width || body.y < 0 || body.y + body.height > this.height) {
@@ -157,9 +184,9 @@ oge.World = function(width, height, zoneSize) {
         var intersection1 = getIntersection(direction.clone().rotate( - 45));
         var intersection2 = getIntersection(direction.clone().rotate(45));
         if (intersection1 < intersection2) {
-            this.moveBody(body, direction.clone().rotate( - 90), 1);
+            moveBody(body, direction.clone().rotate( - 90), 1);
         } else if (intersection1 > intersection2) {
-            this.moveBody(body, direction.clone().rotate(90), 1);
+            moveBody(body, direction.clone().rotate(90), 1);
         }
     }
 
@@ -168,11 +195,11 @@ oge.World = function(width, height, zoneSize) {
             return false;
         }
 
-        if (arguments.length >= 2) {
+        if (typeof active !== 'undefined') {
             body.active = active;
         }
 
-        if (body.active) {
+        if (!!body.active) {
             this.activeBodies.push(body);
         }
 
@@ -226,34 +253,6 @@ oge.World = function(width, height, zoneSize) {
         return bodies;
     };
 
-    this.getZones = function(bodyOrX, y, width, height) {
-        var body, x;
-        body = x = bodyOrX;
-        if (arguments.length === 1) {
-            x = body.x;
-            y = body.y;
-            width = body.width;
-            height = body.height;
-        }
-
-        if (x >= 0 && x + width - 1 < this.width && y >= 0 && y + height - 1 < this.height) {
-            var x1 = x / this.zoneSize << 0;
-            var x2 = (x + width) / this.zoneSize << 0;
-            var y1 = y / this.zoneSize << 0;
-            var y2 = (y + height) / this.zoneSize << 0;
-
-            var pos = 0;
-            var z = [];
-            for (x = x1; x <= x2; x++) {
-                for (y = y1; y <= y2; y++) {
-                    z[pos++] = this.zones[x][y];
-                }
-            }
-            return z;
-        } else {
-            return [];
-        }
-    };
 
     this.step = function(steps) {
         var step, i;
@@ -262,7 +261,7 @@ oge.World = function(width, height, zoneSize) {
             for (i = 0; i < this.activeBodies.length; i++) {
                 var body = this.activeBodies[i];
                 if (body.speed > 0 && body.direction !== null) {
-                    this.moveBody(body);
+                    moveBody(body);
                 }
             }
         }
