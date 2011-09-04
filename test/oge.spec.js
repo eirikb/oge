@@ -16,6 +16,7 @@ cb = function(x, y, w, h) {
     };
 };
 
+/*
 describe('World', function() {
     var w, sb1, sb2, sb3;
 
@@ -290,6 +291,6 @@ describe("More tests in a different spec", function() {
         w.step();
         posCheck(p, 7, 10);
     });
-    */
 });
+    */
 

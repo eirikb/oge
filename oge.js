@@ -31,30 +31,31 @@ var oge = {
 
 oge.World = function(width, height, zoneSize) {
     var self = this,
-    activeBodies = [],
-    zoneSize = typeof zoneSize !== 'undefined' ? zoneSize: 10,
-    zones = oge.zones.createZones(width, height, zoneSize);
+    zones = new oge.Zones(width, height, zoneSize),
+    bodies = new oge.Bodies(zones),
+    activeBodies = [];
+
+    zoneSize = typeof zoneSize !== 'undefined' ? zoneSize: 10;
 
     self.width = width;
     self.height = height;
 
     self.step = function(steps) {
-        var i, body, steps = arguments.length === 0 ? 1: steps;
+        var i, body;
+        steps = arguments.length === 0 ? 1: steps;
 
         for (step = 0; step < steps; step++) {
-                console.log('lol');
-                console.log(activeBodies.length)
             for (i = 0; i < activeBodies.length; i++) {
                 body = activeBodies[i];
-                if (body.speed > 0 && body.direction !== null) {
-                    oge.bodies.moveBody(zones, body);
+                if (body.speed > 0 && (typeof body.direction === 'object')) {
+                    bodies.moveBody(body);
                 }
             }
         }
     };
 
     self.addBody = function(body, active) {
-        if (!oge.zones.addBodyToZones(zones, body)) {
+        if (!zones.addBody(body)) {
             return false;
         }
 
@@ -67,7 +68,7 @@ oge.World = function(width, height, zoneSize) {
 
     self.removeBody = function(body) {
         var i;
-        oge.zones.removeBodyFromZones(zones, body);
+        zones.removeBody(body);
         for (i = 0; i < activeBodies.length; i++) {
             if (activeBodies[i] === body) {
                 activeBodies.splice(i, 1);
