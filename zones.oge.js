@@ -42,7 +42,7 @@ oge.Zones = function(width, height, zoneSize) {
             }
         }
         return z;
-    };
+    }
 
     self.addBody = function(body) {
         var i, z = getZones(body);

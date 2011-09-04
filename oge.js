@@ -30,15 +30,18 @@ var oge = {
 };
 
 oge.World = function(width, height, zoneSize) {
+    zoneSize = typeof zoneSize !== 'undefined' ? zoneSize: 10;
+
     var self = this,
     zones = new oge.Zones(width, height, zoneSize),
-    bodies = new oge.Bodies(zones),
+    bodies = new oge.Bodies(width, height, zones),
     activeBodies = [];
 
-    zoneSize = typeof zoneSize !== 'undefined' ? zoneSize: 10;
 
     self.width = width;
     self.height = height;
+
+    self.onCollision = bodies.onCollision;
 
     self.step = function(steps) {
         var i, body;
@@ -76,5 +79,16 @@ oge.World = function(width, height, zoneSize) {
             }
         }
     };
+};
+
+oge.direction = {
+    rotate: function(direction, degrees) {
+        if (typeof direction === 'object') {
+            var radian = degrees * (Math.PI / 180);
+            direction.cos = Math.cos(Math.acos(direction.cos) + radian);
+            direction.sin = Math.sin(Math.asin(direction.sin) + radian);
+        }
+        return direction;
+    }
 };
 

@@ -5,51 +5,71 @@ oge.Bodies = function(width, height, zones) {
     self.width = width;
     self.height = height;
 
+    function getIntersection(body, direction) {
+        var intersection, i, j, x, y, body2, ignore, ignoreBodies = [],
+        bodies = zones.getBodies(body);
+
+        for (i = 0; i < bodies.length; i++) {
+            body2 = bodies[i];
+            if (body2 !== body && intersects(body, body2)) {
+                ignoreBodies.push(body2);
+            }
+        }
+        intersection = 0;
+        x = body.x + direction.cos * 1.9 << 0;
+        if (x !== body.x) {
+            x = body.x + (x > body.x ? 1: - 1);
+        }
+        y = body.y + direction.sin * 1.9 << 0;
+        if (y !== body.y) {
+            y = body.y + (y > body.y ? 1: - 1);
+        }
+        bodies = zones.getBodies(x, y, body.width, body.height);
+        for (i = 0; i < bodies.length; i++) {
+            body2 = bodies[i];
+            if (body2 !== body && intersects(body2, x, y, body.width, body.height)) {
+                ignore = false;
+                for (j = 0; j < ignoreBodies.length; j++) {
+                    if (body2 === ignoreBodies[j]) {
+                        ignore = true;
+                        break;
+                    }
+                }
+                if (!ignore) {
+                    intersection += intersections(body2, x, y, body.width, body.height);
+                }
+            }
+        }
+        return intersection << 0;
+    }
+
     function slideBody(body, direction) {
-        var getIntersection = function(direction) {
-            var intersection, i, j, x, y, body2, ignore, ignoreBodies = [],
-            bodies = self.getBodies(body);
+        var direction1 = oge.direction.rotate({
+            cos: direction.cos,
+            sin: direction.sin
+        },
+        - 45),
+        direction2 = oge.direction.rotate({
+            cos: direction.cos,
+            sin: direction.sin
+        },
+        45),
+        intersection1 = getIntersection(body, direction1),
+        intersection2 = getIntersection(body, direction2),
+        rotate = 0;
 
-            for (i = 0; i < bodies.length; i++) {
-                body2 = bodies[i];
-                if (body2 !== body && body2.intersects(body)) {
-                    ignoreBodies.push(body2);
-                }
-            }
-            intersection = 0;
-            x = body.x + direction.cos * 1.9 << 0;
-            if (x !== body.x) {
-                x = body.x + (x > body.x ? 1: - 1);
-            }
-            y = body.y + direction.sin * 1.9 << 0;
-            if (y !== body.y) {
-                y = body.y + (y > body.y ? 1: - 1);
-            }
-            bodies = self.getBodies(x, y, body.width, body.height);
-            for (i = 0; i < bodies.length; i++) {
-                body2 = bodies[i];
-                if (body2 !== body && body2.intersects(x, y, body.width, body.height)) {
-                    ignore = false;
-                    for (j = 0; j < ignoreBodies.length; j++) {
-                        if (body2 === ignoreBodies[j]) {
-                            ignore = true;
-                            break;
-                        }
-                    }
-                    if (!ignore) {
-                        intersection += body2.intersection(x, y, body.width, body.height);
-                    }
-                }
-            }
-            return intersection << 0;
-        };
-
-        var intersection1 = getIntersection(direction.clone().rotate( - 45));
-        var intersection2 = getIntersection(direction.clone().rotate(45));
         if (intersection1 < intersection2) {
-            moveBody(body, direction.clone().rotate( - 90), 1);
+            rotate = - 90;
         } else if (intersection1 > intersection2) {
-            moveBody(body, direction.clone().rotate(90), 1);
+            rotate = 90;
+        }
+        if (rotate !== 0) {
+            direction = oge.direction.rotate({
+                cos: direction.cos,
+                sin: direction.sin
+            },
+            rotate);
+            self.moveBody(body, direction, 1);
         }
     }
 
@@ -62,9 +82,9 @@ oge.Bodies = function(width, height, zones) {
         }
 
         return body.x < x + width && body.x + body.width > x && body.y < y + height && body.y + body.height > y;
-    };
+    }
 
-    function intersection(body, x, y, width, height) {
+    function intersections(body, x, y, width, height) {
 
         if (arguments.length === 2) {
             y = x.y;
@@ -98,8 +118,6 @@ oge.Bodies = function(width, height, zones) {
         for (i = 0; i < steps; i++) {
             lastX = body.x;
             lastY = body.y;
-
-            zones.removeBody(zones, body);
 
             body.x += direction.cos;
             body.y += direction.sin;
@@ -138,12 +156,5 @@ oge.Bodies = function(width, height, zones) {
         }
     };
 
-    self.rotate = function(direction, degrees) {
-        if (typeof direction === 'object') {
-            var radian = degrees * (Math.PI / 180);
-            direction.cos = Math.cos(Math.acos(direction.cos) + radian);
-            direction.sin = Math.sin(Math.asin(direction.sin) + radian);
-        }
-    };
 };
 

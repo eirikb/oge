@@ -40,19 +40,21 @@ describe('Bodies', function() {
 
     it('should be possible to slide bodies on collision', function() {
         var b1 = cb(0, 6),
-        b2 = cb(10, 0),
+        b2 = cb(10, 0);
 
         b1.direction = {
             cos: 1,
             sin: 0
         };
         b1.speed = 1;
+        b1.slide = true;
+
         z.addBody(b1);
         z.addBody(b2);
 
         bs.moveBody(b1);
-        expect(b1.x).toEqual(0);
-        expect(count).toEqual(1);
+        expect(b1.x << 0).toEqual(0);
+        expect(b1.y).toEqual(7);
     });
 });
 
