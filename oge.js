@@ -242,6 +242,31 @@ oge.World = function(width, height, zoneSize) {
         return this.x < x + width && this.x + this.width > x && this.y < y + height && this.y + this.height > y;
     }
 
+    function intersection(body, bodyOrX, y, width, height) {
+        var x, body;
+        x = body = bodyOrX;
+        if (arguments.length === 1) {
+            x = body.x;
+            y = body.y;
+            width = body.width;
+            height = body.height;
+        }
+
+        var sx, ex, sy, ey;
+        sx = this.x > x ? this.x: x;
+        ex = this.x + this.width < x + width ? this.x + this.width: x + width;
+        sy = this.y > y ? this.y: y;
+        ey = this.y + this.height < y + height ? this.y + this.width: y + height;
+        return (ex - sx) * (ey - sy);
+    }
+
+    function rotate(degrees) {
+        var radian = degrees * (Math.PI / 180);
+        this.cos = Math.cos(Math.acos(this.cos) + radian);
+        this.sin = Math.sin(Math.asin(this.sin) + radian);
+        return this;
+    }
+
     self.step = function(steps) {
         var i, body, steps = arguments.length === 0 ? 1: steps;
 
