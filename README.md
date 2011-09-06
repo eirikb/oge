@@ -33,3 +33,5 @@ Example
       width: 10,
       height: 20
     });
+    
+    world.step();
