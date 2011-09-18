@@ -1,8 +1,2 @@
-H5Z1
+Box version of OGE
 -
-
-Box2D game?
-
-GWT
---
-The gwt-folder contain the GWT-version of the game
