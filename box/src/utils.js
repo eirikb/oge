@@ -1,42 +1,51 @@
 var utils = {};
 
-utils.createBall = function(world, x, y, radius) {
-    radius = radius || 20;
-    var ballSd = new box2d.CircleDef();
-    ballSd.density = 1.0;
-    ballSd.radius = radius;
-    ballSd.restitution = 0.8;
-    ballSd.friction = 0.9;
-    var ballBd = new box2d.BodyDef();
-    ballBd.AddShape(ballSd);
-    ballBd.position.Set(x, y);
-    return world.CreateBody(ballBd);
-};
+function setDef(def, options, localX, localY) {
+    var opt;
+    if (typeof localX !== 'undefined' && typeof localY !== 'undefined') {
+        def.localPosition.Set(localX, localY);
+    }
+    for (opt in options) {
+        if (options.hasOwnProperty(opt)) {
+            def[opt] = options[opt];
+        }
+    }
+}
 
-utils.createBox = function(world, x, y, width, height, boxOpts, bodyOpts) {
-    var opt, boxSd = new box2d.BoxDef();
-    if (boxOpts) {
-        for (opt in boxOpts) {
-            if (boxOpts.hasOwnProperty(opt)) {
-                boxSd[opt] = boxOpts[opt];
-            }
-        }
-    } else {
-        boxSd.density = 1;
-    }
-    boxSd.extents.Set(width, height);
-    var boxBd = new box2d.BodyDef();
-    if (bodyOpts) {
-        for (opt in boxOpts) {
-            if (boxOpts.hasOwnProperty(opt)) {
-                boxSd[opt] = boxOpts[opt];
-            }
-        }
-    }
-    console.log(boxSd);
-    boxBd.AddShape(boxSd);
-    boxBd.position.Set(x, y);
-    return world.CreateBody(boxBd);
+utils.body = utils.b = function(world, x, y, options) {
+    return (function() {
+        var self = this,
+        body = new box2d.BodyDef();
+
+        body.position.Set(x, y);
+        setDef(body, options);
+
+        self.circle = function(radius, options, localX, localY) {
+            var circle = new box2d.CircleDef();
+
+            circle.radius = radius;
+            setDef(circle, options, localX, localY);
+            body.AddShape(circle);
+
+            return self;
+        };
+
+        self.box = function(width, height, options, localX, localY) {
+            var box = new box2d.BoxDef();
+
+            box.extents.Set(width, height);
+            setDef(box, options, localX, localY);
+            body.AddShape(box);
+
+            return self;
+        };
+
+        self.create = self.c = function() {
+            return world.CreateBody(body);
+        };
+
+        return self;
+    } ());
 };
 
 utils.link = function(world, b1, b2) {
@@ -48,18 +57,18 @@ utils.link = function(world, b1, b2) {
 };
 
 utils.createBridge = function(world, x, y, width) {
-    var b1 = utils.createBox(world, x, y, 5, 2, true),
+    var b1 = utils.body(world, x, y).box(5, 2).create(),
     i = 1,
     b2;
     for (; i < 10; i++) {
-        b2 = utils.createBox(world, x + (i * 15), y, 5, 2, {
+        b2 = utils.body(world, x + (i * 15), y).box(5, 2, {
             density: 20,
             friction: 0.5
-        });
+        }).create();
         utils.link(world, b1, b2);
         b1 = b2;
     }
-    b2 = utils.createBox(world, x + (i * 15), y, 5, 2, true);
+    b2 = utils.body(world, x + (i * 15), y).box(5, 2).create();
     utils.link(world, b1, b2);
 };
 
