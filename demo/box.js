@@ -7,7 +7,6 @@ function createGrid(world, width, height, size) {
             }).c();
         }
     }
-
 }
 
 window.onload = function() {
@@ -23,9 +22,9 @@ window.onload = function() {
     createGrid(world, 1000, 1000, 10);
 
     player = utils.b(world, 150, 250, {
-        preventRotation: true,
-        allowSleep: false
-    }).box(10, 10, {
+        allowSleep: false,
+        preventRotation: true
+    }).circle(10, {
         density: 1,
         friction: 0
     }).c();
@@ -36,6 +35,7 @@ window.onload = function() {
     world.SetFilter({
         ShouldCollide: function(a, b) {
             if (a === player.m_shapeList || b === player.m_shapeList) {
+                console.log(a, b);
                 player.canJump = true;
             }
         }
