@@ -32,15 +32,6 @@ window.onload = function() {
     player.cos = 0;
     player.sin = 0;
 
-    world.SetFilter({
-        ShouldCollide: function(a, b) {
-            if (a === player.m_shapeList || b === player.m_shapeList) {
-                console.log(a, b);
-                player.canJump = true;
-            }
-        }
-    });
-
     canvas = document.createElement('canvas');
     canvas.width = 1000;
     canvas.height = 1000;
@@ -83,8 +74,8 @@ window.onload = function() {
     setInterval(function() {
         t1 = t2 = Date.now();
         t1 = Date.now();
-        player.GetLinearVelocity().Set(player.cos * player.speed, player.sin * player.speed);
         world.Step(1.0 / 60, 1);
+        player.GetLinearVelocity().Set(player.cos * player.speed, player.sin * player.speed);
         t2 = Date.now();
         draw.drawWorld(world, ctx);
         t3 = Date.now();
