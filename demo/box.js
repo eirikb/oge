@@ -1,41 +1,33 @@
-function createGrid(world, width, height, size) {
-    var x, y;
-    for (y = size * 4; y < height / 2; y += size * 4) {
-        for (x = size; x < width / 2; x += size * 4) {
-            utils.b(world, x, y).box(size, size, {
-                userData: 'filled'
-            }).c();
+window.onload = function() {
+    function drawWorld(ctx) {
+        var i, body;
+
+        ctx.clearRect(0, 0, width, height);
+        for (i = 0; i < bodies.length; i++) {
+            body = bodies[i];
+
+            ctx.fillStyle = body.slide ? 'rgb(200,0,0)': 'rgb(0,00,200)';
+            ctx.fillRect(body.x, body.y, body.width, body.height);
         }
     }
-}
 
-window.onload = function() {
-    var canvas, bd, sd, worldAABB = new box2d.AABB(),
-    gravity = new box2d.Vec2(0, 0),
-    doSleep = true;
+    var i, width = 1000,
+    height = 1000,
+    bodies = [],
+    world = new oge.World(width, height),
+    player = world.addCircle(100, 100, 10),
+    canvas = document.createElement('canvas'),
+    ctx = canvas.getContext('2d');
 
-    worldAABB.minVertex.Set(0, 0);
-    worldAABB.maxVertex.Set(1000, 1000);
+    console.log(world.addCircle(100, 200, 10));
 
-    world = new box2d.World(worldAABB, gravity, doSleep);
+    canvas.width = 1000;
+    canvas.height = 1000;
 
-    createGrid(world, 1000, 1000, 10);
-
-    player = utils.b(world, 150, 250, {
-        allowSleep: false,
-        preventRotation: true
-    }).circle(10, {
-        density: 1,
-        friction: 0
-    }).c();
     player.speed = 100;
     player.cos = 0;
     player.sin = 0;
 
-    canvas = document.createElement('canvas');
-    canvas.width = 1000;
-    canvas.height = 1000;
-    ctx = canvas.getContext('2d');
     document.body.appendChild(canvas);
 
     document.onkeydown = function(e) {
@@ -64,20 +56,26 @@ window.onload = function() {
         }
     };
 
-    canvas.onclick = function(e) {
-        utils.b(world, e.offsetX, e.offsetY).box(10, 10, {
-            density: 1
-        }).c();
-    };
+    for (i = 0; i < 4; i++) {
+        world.addBox(100 + i * 60, i * 45, 60, 45);
+    }
+
+    world.addBox(100, 200);
+    world.addBox(70, 250);
+    world.addBox(100, 300);
 
     var t1, t2, t3;
     setInterval(function() {
         t1 = t2 = Date.now();
         t1 = Date.now();
-        world.Step(1.0 / 60, 1);
+
+        world.step();
+
         player.GetLinearVelocity().Set(player.cos * player.speed, player.sin * player.speed);
         t2 = Date.now();
-        draw.drawWorld(world, ctx);
+        drawWorld(ctx);
+        draw.drawWorld(world.w, ctx);
+        
         t3 = Date.now();
 
         t3 = t3 - t1;
@@ -86,5 +84,6 @@ window.onload = function() {
         ctx.fillText('FPS: ' + Math.floor(1000 / t1) + '. Game: ' + t2 + '. Draw: ' + t3, 0, 10);
     },
     1000 / 60);
+
 };
 

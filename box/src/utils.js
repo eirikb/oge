@@ -33,7 +33,7 @@ utils.body = utils.b = function(world, x, y, options) {
         self.box = function(width, height, options, localX, localY) {
             var box = new box2d.BoxDef();
 
-            box.extents.Set(width, height);
+            box.extents.Set(width / 2, height / 2);
             setDef(box, options, localX, localY);
             body.AddShape(box);
 

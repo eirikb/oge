@@ -14,21 +14,21 @@ oge.World = function(width, height) {
     world = new box2d.World(worldAABB, gravity, doSleep);
 
     self.step = function(steps) {
-        world.Step();
+        world.Step(1.0 / 60, 1);
     };
 
     self.addCircle = function(x, y, radius, active) {
-        return utils.b(world, body.x, body.y, {
+        return utils.b(world, x, y, {
             allowSleep: false,
             preventRotation: true
-        }).circle(body.width, {
+        }).circle(radius, {
             density: 1,
             friction: 0
         }).c();
     };
 
     self.addBox = function(x, y, width, height, active) {
-        return utils.b(world, body.x, body.y).box(body.width, body.height).c();
+        return utils.b(world, x, y).box(width, height).c();
     };
 
     self.w = world;
