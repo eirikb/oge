@@ -30,7 +30,7 @@ var oge = {
 };
 
 oge.World = function(width, height, zoneSize) {
-    zoneSize = typeof zoneSize !== 'undefined' ? zoneSize: 10;
+    zoneSize = zoneSize || 10;
 
     var self = this,
     zones = new oge.Zones(width, height, zoneSize),

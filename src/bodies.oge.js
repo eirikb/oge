@@ -16,11 +16,11 @@ oge.Bodies = function(width, height, zones) {
             }
         }
         intersection = 0;
-        x = body.x + direction.cos * 1.9 << 0;
+        x = Math.floor(body.x + direction.cos * 1.9);
         if (x !== body.x) {
             x = body.x + (x > body.x ? 1: - 1);
         }
-        y = body.y + direction.sin * 1.9 << 0;
+        y = Math.floor(body.y + direction.sin * 1.9);
         if (y !== body.y) {
             y = body.y + (y > body.y ? 1: - 1);
         }
@@ -40,7 +40,7 @@ oge.Bodies = function(width, height, zones) {
                 }
             }
         }
-        return intersection << 0;
+        return Math.floor(intersection);
     }
 
     function slideBody(body, direction) {
