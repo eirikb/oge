@@ -26,6 +26,7 @@ Example
       slide: true
     };
 
+    // Second arguments means it is an active body
     world.addBody(player, true);
     world.addBody({
       x: 50,
