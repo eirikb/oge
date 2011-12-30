@@ -1,0 +1,39 @@
+body {
+    background-color: #EEE;
+    margin: 0 auto;
+    width: 720px;
+}
+
+.content {
+    width: 720px;
+    height: 400px;
+    background-color: #FFF;
+    font-size: 14px;
+    margin: 5px 0px 10px 0px;
+    padding: 10px;
+    border: #999 1px solid;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    -moz-border-radius: 8px; 
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+}
+
+.player {
+    display: none;
+    position: absolute;
+    background-image: url(player.png);
+    width: 16px;
+    height: 22px;
+}
+
+.game {
+    position: absolute;
+    height: 100%;
+}
+
+.overlay {
+    position: absolute;
+    left: 46px;
+    top: 158px;
+}
+
