@@ -16,17 +16,54 @@ cb = function(x, y, w, h) {
     };
 };
 
+describe('rotation', function() {
+    it('should rotate correctly accoring to reversed y-axis', function() {
+        var c = Math.cos(Math.PI / 4);
+        [{
+            d: [1, 0],
+            e: {
+                '-90': [0, 1],
+                '-45': [c, c],
+                45: [c, -c],
+                90: [0, -1]
+            }
+        },
+        {
+            d: [c, -c],
+            e: {
+                '-90': [c, c],
+                '-45': [1, 0],
+                45: [0, -1],
+                90: [-c, -c]
+            }
+        }].forEach(function(v) {
+            Object.keys(v.e).forEach(function(k) {
+                var r = oge.direction.rotate({
+                    cos: v.d[0],
+                    sin: v.d[1]
+                },
+                k);
+                expect(r.cos.toFixed(4)).toBe(v.e[k][0].toFixed(4));
+                expect(r.sin.toFixed(4)).toBe(v.e[k][1].toFixed(4));
+            });
+        });
+    });
+});
+
 describe('World', function() {
     var w, sb1, sb2, sb3;
+
+    function addTheBodies() {
+        w.addBody(sb1);
+        w.addBody(sb2);
+        w.addBody(sb2);
+    }
 
     beforeEach(function() {
         w = new oge.World(1000, 1000);
         sb1 = cb(10, 10);
         sb2 = cb(50, 10);
         sb2 = cb(30, 20);
-        w.addBody(sb1);
-        w.addBody(sb2);
-        w.addBody(sb2);
     });
 
     it("should move active bodies when stepping", function() {
@@ -36,6 +73,8 @@ describe('World', function() {
             sin: 0
         };
         b.speed = 1;
+
+        addTheBodies();
 
         expect(w.addBody(b, true)).toBeTruthy();
         w.step();
@@ -50,6 +89,8 @@ describe('World', function() {
             sin: 0
         };
         b.speed = 1;
+
+        addTheBodies();
 
         expect(w.addBody(b, true)).toBeTruthy();
         w.step();
@@ -268,5 +309,26 @@ describe('World', function() {
         expect(b.x).toBe(0);
         expect(b.y).toBe(16);
     });
+
+//    Not yet implemented
+//    it("should not stop sliding when hitting a sliding body with an angle", function() {
+//        b = cb(10, 10, 10, 10);
+//        b.slide = true;
+//        b.direction = {
+//            cos: 1,
+//            sin: 1
+//        };
+//
+//        w.addBody(cb(20, 0, 20, 100));
+//        w.addBody(b, true);
+//
+//        expect(b.x).toBe(10);
+//        expect(b.y).toBe(10);
+//
+//        w.step();
+//
+//        expect(b.x).toBe(10);
+//        expect(b.y).toBe(11);
+//    });
 });
 

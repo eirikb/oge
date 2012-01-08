@@ -22,11 +22,11 @@
  * THE SOFTWARE.
  *
  * @author Eirik Brandtzæg <eirikb@eirikb.no>
- * @Version 0.9
+ * @Version 1.0
  */
 
 var oge = {
-    version: 0.9
+    version: 1.0
 };
 
 oge.World = function(width, height, zoneSize) {
@@ -37,20 +37,20 @@ oge.World = function(width, height, zoneSize) {
     bodies = new oge.Bodies(width, height, zones),
     activeBodies = [];
 
-
     self.width = width;
     self.height = height;
 
     self.onCollision = bodies.onCollision;
 
     self.step = function(steps) {
-        var i, body;
+        var step, i, dir, body;
         steps = arguments.length === 0 ? 1: steps;
 
         for (step = 0; step < steps; step++) {
             for (i = 0; i < activeBodies.length; i++) {
                 body = activeBodies[i];
-                if (body.speed > 0 && (typeof body.direction === 'object')) {
+                dir = body.direction;
+                if (body.speed > 0 && (typeof dir === 'object') && (dir.cos !== 0 || dir.sin !== 0)) {
                     bodies.moveBody(body);
                 }
             }
@@ -86,7 +86,7 @@ oge.direction = {
         if (typeof direction === 'object') {
             var radian = degrees * (Math.PI / 180);
             direction.cos = Math.cos(Math.acos(direction.cos) + radian);
-            direction.sin = Math.sin(Math.asin(direction.sin) + radian);
+            direction.sin = Math.sin(Math.PI - Math.asin(direction.sin) + radian);
         }
         return direction;
     }
