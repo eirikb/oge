@@ -5,54 +5,47 @@ oge.Bodies = function(width, height, zones) {
     self.width = width;
     self.height = height;
 
-    function getIntersection(body, direction) {
-        var intersection, i, j, x, y, body2, ignore, ignoreBodies = [],
-        bodies = zones.getBodies(body);
-
-        for (i = 0; i < bodies.length; i++) {
-            body2 = bodies[i];
-            if (body2 !== body && intersects(body, body2)) {
-                ignoreBodies.push(body2);
-            }
+    function intersects(body, x, y, width, height) {
+        if (arguments.length === 2) {
+            y = x.y;
+            width = x.width;
+            height = x.height;
+            x = x.x;
         }
-        intersection = 0;
-        x = body.x + Math.round(direction.cos);
-        y = body.y + Math.round(direction.sin);
 
-        bodies = zones.getBodies(x, y, body.width, body.height);
-        for (i = 0; i < bodies.length; i++) {
-            body2 = bodies[i];
-            if (body2 !== body && intersects(body2, x, y, body.width, body.height)) {
-                ignore = false;
-                for (j = 0; j < ignoreBodies.length; j++) {
-                    if (body2 === ignoreBodies[j]) {
-                        ignore = true;
-                        break;
-                    }
-                }
-                if (!ignore) {
-                    intersection += intersections(body2, x, y, body.width, body.height);
-                }
-            }
-        }
-        return Math.floor(intersection);
+        return body.x < x + width && body.x + body.width > x && body.y < y + height && body.y + body.height > y;
     }
 
-    function slideBody(body, direction) {
-        var r1, r2, r3, r4, rotate, radius, cos, sin, intersection, min = Number.MAX,
-        angles = [ - 45, 45, - 90, 90];
+    function intersections(body, x, y, width, height) {
+        var sx = Math.min(body.x + body.width, x + width) - Math.max(body.x, x),
+        sy = Math.min(body.y + body.height, y + height) - Math.max(body.y, y);
+        return sx * sy;
+    }
+
+
+    function slideBody(body, direction, collisions) {
+        var calc, r1, r2, r3, r4, rotate, radius, cos, sin;
 
         radius = Math.atan2(Math.sin(Math.asin(direction.sin)), Math.cos(Math.acos(direction.cos)));
         cos = Math.cos(radius);
         sin = Math.sin(radius);
 
         calc = function(r) {
-            var dir = oge.direction.rotate({
+            var x, y, i, body2, tot = 0,
+            dir = oge.direction.rotate({
                 cos: cos,
                 sin: sin
             },
             r);
-            return getIntersection(body, dir);
+            x = body.x + Math.round(dir.cos);
+            y = body.y + Math.round(dir.sin);
+            for (i = 0; i < collisions.length; i++) {
+                body2 = collisions[i];
+                if (intersects(body2, x, y, body.width, body.height)) {
+                    tot += intersections(body2, x, y, body.width, body.height);
+                }
+            }
+            return tot;
         };
 
         r1 = calc( - 90);
@@ -76,12 +69,11 @@ oge.Bodies = function(width, height, zones) {
                 }
             }
         } else {
-            //            TODO Sliding sideways is foobar
-            //            if (r2 === 0) {
-            //                rotate = - 45;
-            //            } else if (r3 === 0) {
-            //                rotate = 45;
-            //            }
+            if (r2 === 0) {
+                rotate = - 45;
+            } else if (r3 === 0) {
+                rotate = 45;
+            }
         }
 
         if (rotate !== 0) {
@@ -93,23 +85,6 @@ oge.Bodies = function(width, height, zones) {
         }
     }
 
-    function intersects(body, x, y, width, height) {
-        if (arguments.length === 2) {
-            y = x.y;
-            width = x.width;
-            height = x.height;
-            x = x.x;
-        }
-
-        return body.x < x + width && body.x + body.width > x && body.y < y + height && body.y + body.height > y;
-    }
-
-    function intersections(body, x, y, width, height) {
-        var sx = Math.min(body.x + body.width, x + width) - Math.max(body.x, x),
-        sy = Math.min(body.y + body.height, y + height) - Math.max(body.y, y);
-        return sx * sy;
-    }
-
     self.onCollision = function(body, cb) {
         if (!onCollisions[body]) {
             onCollisions[body] = [];
@@ -118,7 +93,7 @@ oge.Bodies = function(width, height, zones) {
     };
 
     self.moveBody = function(body, direction, steps) {
-        var lastX, lastY, body2, collision, bodies, i, j, k;
+        var lastX, lastY, body2, collision, bodies, i, j, k, collisions;
 
         if (arguments.length === 1) {
             direction = body.direction;
@@ -126,6 +101,7 @@ oge.Bodies = function(width, height, zones) {
         }
 
         for (i = 0; i < steps; i++) {
+            collisions = [];
             lastX = body.x;
             lastY = body.y;
 
@@ -146,21 +122,25 @@ oge.Bodies = function(width, height, zones) {
                                 onCollisions[body][k](collision);
                             }
                         }
-                        body.x = lastX;
-                        body.y = lastY;
-                        zones.addBody(zones, body);
-                        if (body.slide && j >= 0) {
-                            slideBody(body, direction);
-                        } else {
-                            return;
-                        }
+                        collisions.push(body2);
                     }
                 }
             } else {
                 body.x = lastX;
                 body.y = lastY;
             }
+            if (collisions.length > 0) {
+                body.x = lastX;
+                body.y = lastY;
+            }
             zones.addBody(zones, body);
+            if (collisions.length > 0) {
+                if (body.slide && j > 0) {
+                    slideBody(body, direction, collisions);
+                } else {
+                    return;
+                }
+            }
         }
     };
 };

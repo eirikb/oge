@@ -82,13 +82,17 @@ oge.World = function(width, height, zoneSize) {
 };
 
 oge.direction = {
-    rotate: function(direction, degrees) {
+    rotate: function(direction, deg) {
         if (typeof direction === 'object') {
-            var radian = degrees * (Math.PI / 180);
-            direction.cos = Math.cos(Math.acos(direction.cos) + radian);
-            direction.sin = Math.sin(Math.PI - Math.asin(direction.sin) + radian);
+            var f = deg * Math.PI / 180,
+            x = direction.cos * Math.cos(f) - direction.sin * Math.sin(f),
+            y = direction.sin * Math.cos(f) + direction.cos * Math.sin(f);
+
+            direction.cos = x;
+            direction.sin = y;
+
+            return direction;
         }
-        return direction;
     }
 };
 

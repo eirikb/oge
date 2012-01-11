@@ -22,29 +22,33 @@ describe('rotation', function() {
         [{
             d: [1, 0],
             e: {
-                '-90': [0, 1],
-                '-45': [c, c],
-                45: [c, -c],
-                90: [0, -1]
+                '-90': [0, -1],
+                '-45': [c, -c],
+                45: [c, c],
+                90: [0, 1]
             }
         },
         {
             d: [c, -c],
             e: {
-                '-90': [c, c],
-                '-45': [1, 0],
-                45: [0, -1],
-                90: [-c, -c]
+                '-90': [-c, -c],
+                '-45': [0, -1],
+                45: [1, 0],
+                90: [c, c]
             }
         }].forEach(function(v) {
             Object.keys(v.e).forEach(function(k) {
-                var r = oge.direction.rotate({
+                var c1, c2, s1, s2, r = oge.direction.rotate({
                     cos: v.d[0],
                     sin: v.d[1]
                 },
                 k);
-                expect(r.cos.toFixed(4)).toBe(v.e[k][0].toFixed(4));
-                expect(r.sin.toFixed(4)).toBe(v.e[k][1].toFixed(4));
+                c1 = parseFloat(r.cos.toFixed(4), 10);
+                s1 = parseFloat(r.sin.toFixed(4), 10);
+                c2 = parseFloat(v.e[k][0].toFixed(4), 10);
+                s2 = parseFloat(v.e[k][1].toFixed(4), 10);
+                expect(c1).toBe(c2);
+                expect(s1).toBe(s2);
             });
         });
     });
