@@ -12,7 +12,15 @@ $(function() {
         },
         slide: true
     },
-    $player = $('.player');
+    $player = $('.player'),
+    anim = 0,
+xAnim = 0,
+yAnim = 0;
+
+    $player.css({
+        left: player.x,
+        top: player.y
+    });
 
     keyboard.init(player);
 
@@ -56,12 +64,35 @@ $(function() {
 
     $player.show();
 
+    anim = 0;
     setInterval(function() {
+        var cos = player.direction.cos,
+        sin = player.direction.sin;
+
         world.step();
-        $player.css({
-            left: player.x,
-            top: player.y
-        });
+
+        if (cos !== 0 || sin !== 0) {
+            $player.css({
+                left: player.x,
+                top: player.y
+            });
+
+            xAnim = 3;
+            if (sin > 0) {
+                xAnim = 0;
+            } else if (sin < 0) {
+                xAnim = 1;
+            } else if (cos < 0) {
+                xAnim = 2;
+            }
+
+            if (++anim === 5) {
+                anim = 0;
+                yAnim++;
+                yAnim = yAnim > 3 ? 0 : yAnim;
+            }
+            $player.css('background-position', '-' + (xAnim * 18) + 'px ' + (yAnim * 22) + 'px');
+        }
     },
     (1000 / 30));
 
@@ -73,7 +104,6 @@ $(function() {
 
         var cos = Math.round(x / ($t.width() / 2)) - 1,
         sin = Math.round(y / ($t.height() / 2)) - 1;
-
 
         player.direction.cos = cos;
         player.direction.sin = sin;
