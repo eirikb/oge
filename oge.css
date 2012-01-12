@@ -6,7 +6,6 @@ body {
 
 .content {
     width: 720px;
-    height: 400px;
     background-color: #FFF;
     font-size: 14px;
     margin: 5px 0px 10px 0px;
@@ -28,12 +27,20 @@ body {
 
 .game {
     position: absolute;
-    height: 100%;
+}
+
+.gamewrapper {
+    height: 330px;
 }
 
 .overlay {
     position: absolute;
     left: 36px;
     top: 148px;
+}
+
+.compass {
+    width: 200px;
+    height: 200px;
 }
 

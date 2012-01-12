@@ -28,7 +28,9 @@ var keyboard = (function() {
             if (code) {
                 if (last !== e.keyCode) {
                     player.direction[code.type] = code.val;
-                    down && down(e.keyCode);
+                    if (down) {
+                        down(e.keyCode);
+                    }
                     e.stopPropagation();
                     e.preventDefault();
                     last = e.keyCode;
@@ -40,14 +42,18 @@ var keyboard = (function() {
             last = 0;
             if (code) {
                 player.direction[code.type] = 0;
-                up && up(e.keyCode);
+                if (up) { 
+                    up(e.keyCode);
+                }
                 e.stopPropagation();
                 e.preventDefault();
                 return false;
             }
         }).keypress(function(e) {
             if (e.keyCode === 32) {
-                down && down(e.keyCode);
+                if (down) {
+                    down(e.keyCode);
+                }
                 e.stopPropagation();
                 e.preventDefault();
                 return false;

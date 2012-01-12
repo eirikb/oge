@@ -65,12 +65,15 @@ $(function() {
     },
     (1000 / 30));
 
-    $('img').first().bind('touchstart', function(e) {
-        var x = e.originalEvent.touches[0].pageX,
-        y = e.originalEvent.touches[0].pageY;
+    $('img').last().bind('touchstart touchmove', function(e) {
+        var $t = $(this),
+        p = $t.position(),
+        x = e.originalEvent.touches[0].pageX - p.left,
+        y = e.originalEvent.touches[0].pageY - p.top;
 
-        var cos = Math.round(x / (width / 2)) - 1,
-        sin = Math.round(y / (height / 2)) - 1;
+        var cos = Math.round(x / ($t.width() / 2)) - 1,
+        sin = Math.round(y / ($t.height() / 2)) - 1;
+
 
         player.direction.cos = cos;
         player.direction.sin = sin;
@@ -81,5 +84,6 @@ $(function() {
         player.direction.sin = 0;
         return false;
     });
+
 });
 
